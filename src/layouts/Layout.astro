@@ -1,0 +1,107 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Dragon Ball Universe - Explore characters, planets, and transformations',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Bangers&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body class="bg-space-gradient min-h-screen text-white">
+    <header class="bg-gradient-to-r from-dragon-orange to-dragon-gold shadow-lg sticky top-0 z-50">
+      <nav class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <a
+            href="/"
+            class="text-2xl font-dragon font-bold text-white hover:text-yellow-200 transition-colors"
+          >
+            🐉 Dragon Ball Universe
+          </a>
+          <div class="hidden md:flex space-x-6">
+            <a href="/" class="hover:text-yellow-200 transition-colors font-semibold">Home</a>
+            <a href="/characters" class="hover:text-yellow-200 transition-colors font-semibold"
+              >Characters</a
+            >
+            <a href="/planets" class="hover:text-yellow-200 transition-colors font-semibold"
+              >Planets</a
+            >
+            <a href="/transformations" class="hover:text-yellow-200 transition-colors font-semibold"
+              >Transformations</a
+            >
+          </div>
+          <button id="mobile-menu-btn" class="md:hidden text-white hover:text-yellow-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden mt-4 space-y-2 hidden">
+          <a href="/" class="block hover:text-yellow-200 transition-colors font-semibold">Home</a>
+          <a href="/characters" class="block hover:text-yellow-200 transition-colors font-semibold"
+            >Characters</a
+          >
+          <a href="/planets" class="block hover:text-yellow-200 transition-colors font-semibold"
+            >Planets</a
+          >
+          <a
+            href="/transformations"
+            class="block hover:text-yellow-200 transition-colors font-semibold">Transformations</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <footer class="bg-gray-900 text-white py-8 mt-16">
+      <div class="container mx-auto px-4 text-center">
+        <p class="text-lg font-dragon">
+          Made with ⚡ by a Dragon Ball fan using the
+          <a
+            href="https://dragonball-api.com"
+            target="_blank"
+            class="text-dragon-gold hover:text-dragon-orange transition-colors"
+          >
+            Dragon Ball API
+          </a>
+        </p>
+        <p class="text-sm text-gray-400 mt-2">Built with Astro, TypeScript, and Tailwind CSS</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn?.addEventListener('click', () => {
+          mobileMenu?.classList.toggle('hidden');
+        });
+      });
+    </script>
+  </body>
+</html>

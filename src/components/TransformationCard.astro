@@ -1,0 +1,50 @@
+---
+import type { Transformation } from '../types/api';
+
+export interface Props {
+  transformation: Transformation;
+}
+
+const { transformation } = Astro.props;
+---
+
+<div
+  class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-saiyan-yellow/20"
+>
+  <div class="relative">
+    <img
+      src={transformation.image}
+      alt={transformation.name}
+      class="w-full h-64 object-cover"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+    <div class="absolute bottom-2 left-2 right-2">
+      <h3 class="text-lg font-manga text-saiyan-yellow">{transformation.name}</h3>
+    </div>
+  </div>
+
+  <div class="p-4">
+    <div class="bg-gray-700 p-2 rounded mb-3">
+      <span class="text-saiyan-yellow font-semibold">Ki Level:</span>
+      <span class="text-white ml-1">{transformation.ki}</span>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <a
+        href={`/transformations/${transformation.id}`}
+        class="bg-saiyan-gradient text-gray-900 px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-sm"
+      >
+        View Form
+      </a>
+
+      <div class="flex space-x-1">
+        {
+          Array.from({ length: 3 }).map((_, i) => (
+            <span class="text-lg text-saiyan-yellow animate-energy-pulse">⚡</span>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CharacterCard from '../components/CharacterCard.astro';
+import Pagination from '../components/Pagination.astro';
+import { dragonBallApi } from '../utils/api';
+import type { Character } from '../types/api';
+
+// Get query parameters
+const url = new URL(Astro.request.url);
+const page = parseInt(url.searchParams.get('page') || '1');
+const name = url.searchParams.get('name') || '';
+const race = url.searchParams.get('race') || '';
+const gender = url.searchParams.get('gender') || '';
+const affiliation = url.searchParams.get('affiliation') || '';
+
+// Fetch characters with filters
+const params = {
+  page,
+  limit: 12,
+  ...(name && { name }),
+  ...(race && { race }),
+  ...(gender && { gender }),
+  ...(affiliation && { affiliation }),
+};
+
+let characters: Character[] = [];
+let meta = {
+  totalItems: 0,
+  itemCount: 0,
+  itemsPerPage: 12,
+  totalPages: 0,
+  currentPage: page,
+};
+
+try {
+  const response = await dragonBallApi.getAllCharacters(params);
+  characters = response?.items || [];
+  meta = response?.meta || meta;
+} catch (error) {
+  console.error('Error fetching characters:', error);
+  // Keep default values
+}
+
+// Available filter options (you might want to fetch these dynamically)
+const races = ['Human', 'Saiyan', 'Namekian', 'Majin', 'Android', 'Angel', 'God', 'Frieza Race'];
+const genders = ['Male', 'Female'];
+const affiliations = [
+  'Z Fighter',
+  'Red Ribbon Army',
+  'Namekian Warrior',
+  'Frieza Force',
+  'Pride Troopers',
+  'Team Universe 7',
+];
+---
+
+<Layout title="Dragon Ball Characters">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-manga text-dragon-gold mb-4">Legendary Warriors</h1>
+      <p class="text-xl text-gray-300">Discover the most powerful fighters across the universe</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-gray-800 p-6 rounded-lg mb-8 border border-dragon-gold/20">
+      <h2 class="text-2xl font-dragon text-dragon-gold mb-4">Filter Characters</h2>
+
+      <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div>
+          <label class="block text-white font-semibold mb-2">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={name}
+            placeholder="Search by name..."
+            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Race</label>
+          <select
+            name="race"
+            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+          >
+            <option value="">All Races</option>
+            {
+              races.map((raceOption) => (
+                <option value={raceOption} selected={race === raceOption}>
+                  {raceOption}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Gender</label>
+          <select
+            name="gender"
+            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+          >
+            <option value="">All Genders</option>
+            {
+              genders.map((genderOption) => (
+                <option value={genderOption} selected={gender === genderOption}>
+                  {genderOption}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Affiliation</label>
+          <select
+            name="affiliation"
+            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+          >
+            <option value="">All Affiliations</option>
+            {
+              affiliations.map((affiliationOption) => (
+                <option value={affiliationOption} selected={affiliation === affiliationOption}>
+                  {affiliationOption}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+
+        <div class="flex items-end">
+          <button
+            type="submit"
+            class="w-full bg-dragon-gradient text-white p-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+          >
+            Filter
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Info -->
+    <div class="flex justify-between items-center mb-6">
+      <p class="text-gray-300">
+        Showing {meta.itemCount} of {meta.totalItems} characters
+        {name || race || gender || affiliation ? ' (filtered)' : ''}
+      </p>
+      <p class="text-gray-300">
+        Page {meta.currentPage} of {meta.totalPages}
+      </p>
+    </div>
+
+    <!-- Characters Grid -->
+    {
+      characters.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+          {characters.map((character) => (
+            <CharacterCard character={character} showDetails={true} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <div class="text-6xl mb-4">🔍</div>
+          <h3 class="text-2xl font-manga text-dragon-gold mb-2">No Characters Found</h3>
+          <p class="text-gray-300 mb-6">Try adjusting your filters or search terms</p>
+          <a
+            href="/characters"
+            class="bg-dragon-gradient text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+          >
+            Reset Filters
+          </a>
+        </div>
+      )
+    }
+
+    <!-- Pagination -->
+    {
+      characters.length > 0 && (
+        <Pagination
+          currentPage={meta.currentPage}
+          totalPages={meta.totalPages}
+          baseUrl="/characters"
+        />
+      )
+    }
+  </div>
+</Layout>

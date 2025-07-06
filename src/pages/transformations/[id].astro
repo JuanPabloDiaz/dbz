@@ -1,0 +1,323 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { dragonBallApi } from '../../utils/api';
+
+export async function getStaticPaths() {
+  try {
+    // Fetch all transformations to generate static paths
+    const response = await dragonBallApi.getAllTransformations({ limit: 100 });
+    const transformations = response?.items || [];
+
+    if (!transformations.length) {
+      console.warn('No transformations found for static paths generation');
+      return [];
+    }
+
+    return transformations.map((transformation) => ({
+      params: { id: transformation.id.toString() },
+    }));
+  } catch (error) {
+    console.error('Error fetching transformations for static paths:', error);
+    return [];
+  }
+}
+
+const { id } = Astro.params;
+if (!id) {
+  throw new Error('Transformation ID is required');
+}
+
+let transformation;
+try {
+  transformation = await dragonBallApi.getTransformationById(parseInt(id));
+} catch (error) {
+  console.error(`Error fetching transformation ${id}:`, error);
+  throw new Error(`Transformation with ID ${id} not found`);
+}
+
+if (!transformation) {
+  throw new Error(`Transformation with ID ${id} not found`);
+}
+
+// Calculate power level stars based on Ki
+const getPowerStars = (ki: string): number => {
+  const kiValue = parseInt(ki.replace(/\D/g, '')) || 0;
+  if (kiValue >= 1000000000) return 5;
+  if (kiValue >= 100000000) return 4;
+  if (kiValue >= 10000000) return 3;
+  if (kiValue >= 1000000) return 2;
+  return 1;
+};
+
+const powerStars = getPowerStars(transformation.ki);
+---
+
+<Layout title={`${transformation.name} - Dragon Ball Transformation`}>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Back Button -->
+    <div class="mb-6">
+      <a
+        href="/transformations"
+        class="inline-flex items-center text-saiyan-yellow hover:text-yellow-300 transition-colors"
+      >
+        ← Back to Transformations
+      </a>
+    </div>
+
+    <!-- Transformation Header -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <div class="relative">
+        <img
+          src={transformation.image}
+          alt={transformation.name}
+          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-saiyan-yellow/20"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-lg"
+        >
+        </div>
+        <div class="absolute bottom-4 left-4 right-4">
+          <div class="flex justify-between items-end">
+            <div>
+              <h1 class="text-3xl font-manga text-saiyan-yellow mb-2">{transformation.name}</h1>
+              <div class="flex space-x-1">
+                {
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <span
+                      class={`text-2xl ${i < powerStars ? 'text-saiyan-yellow animate-energy-pulse' : 'text-gray-600'}`}
+                    >
+                      ⭐
+                    </span>
+                  ))
+                }
+              </div>
+            </div>
+            <div class="text-4xl animate-energy-pulse">⚡</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-5xl font-manga text-saiyan-yellow mb-4 lg:hidden">
+            {transformation.name}
+          </h1>
+          <div class="bg-gray-800 p-6 rounded-lg border border-saiyan-yellow/20">
+            <h3 class="text-saiyan-yellow font-semibold mb-3 text-xl flex items-center">
+              ⚡ Power Level
+            </h3>
+            <p class="text-3xl font-dragon text-white mb-2">{transformation.ki}</p>
+            <div class="flex space-x-1 lg:hidden">
+              {
+                Array.from({ length: 5 }).map((_, i) => (
+                  <span
+                    class={`text-xl ${i < powerStars ? 'text-saiyan-yellow' : 'text-gray-600'}`}
+                  >
+                    ⭐
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-lg border border-dragon-gold/20">
+          <h3 class="text-dragon-gold font-semibold mb-3 text-xl">Transformation Details</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Type:</span>
+              <span class="text-white font-semibold">
+                {
+                  transformation.name.includes('Super Saiyan')
+                    ? 'Saiyan Evolution'
+                    : transformation.name.includes('Great Ape')
+                      ? 'Primal Form'
+                      : transformation.name.includes('God')
+                        ? 'Divine Form'
+                        : transformation.name.includes('Ultra')
+                          ? 'Transcendent Form'
+                          : transformation.name.includes('Fusion')
+                            ? 'Fusion Technique'
+                            : 'Special Transformation'
+                }
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Rarity:</span>
+              <span class="text-white font-semibold">
+                {
+                  powerStars >= 5
+                    ? 'Legendary'
+                    : powerStars >= 4
+                      ? 'Ultra Rare'
+                      : powerStars >= 3
+                        ? 'Rare'
+                        : powerStars >= 2
+                          ? 'Uncommon'
+                          : 'Common'
+                }
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Category:</span>
+              <span class="text-white font-semibold">
+                {
+                  transformation.name.includes('God') || transformation.name.includes('Ultra')
+                    ? 'Divine'
+                    : transformation.name.includes('Super Saiyan')
+                      ? 'Saiyan'
+                      : transformation.name.includes('Majin')
+                        ? 'Magical'
+                        : transformation.name.includes('Android')
+                          ? 'Artificial'
+                          : 'Natural'
+                }
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-lg border border-dragon-red/20">
+          <h3 class="text-dragon-red font-semibold mb-3 text-xl">Combat Analysis</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center">
+              <div class="text-2xl mb-1">🔥</div>
+              <div class="text-sm text-gray-400">Offensive</div>
+              <div class="text-lg font-bold text-white">
+                {
+                  powerStars >= 4
+                    ? 'Devastating'
+                    : powerStars >= 3
+                      ? 'High'
+                      : powerStars >= 2
+                        ? 'Moderate'
+                        : 'Basic'
+                }
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl mb-1">🛡️</div>
+              <div class="text-sm text-gray-400">Defensive</div>
+              <div class="text-lg font-bold text-white">
+                {
+                  powerStars >= 4
+                    ? 'Impenetrable'
+                    : powerStars >= 3
+                      ? 'Strong'
+                      : powerStars >= 2
+                        ? 'Solid'
+                        : 'Standard'
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transformation Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-saiyan-yellow/20">
+        <div class="text-3xl mb-2">⚡</div>
+        <div class="text-saiyan-yellow font-semibold">Energy Output</div>
+        <div class="text-white">{transformation.ki}</div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+        <div class="text-3xl mb-2">⭐</div>
+        <div class="text-dragon-gold font-semibold">Power Rating</div>
+        <div class="text-white">{powerStars}/5 Stars</div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-red/20">
+        <div class="text-3xl mb-2">🎯</div>
+        <div class="text-dragon-red font-semibold">Difficulty</div>
+        <div class="text-white">
+          {
+            powerStars >= 5
+              ? 'Impossible'
+              : powerStars >= 4
+                ? 'Extreme'
+                : powerStars >= 3
+                  ? 'Hard'
+                  : powerStars >= 2
+                    ? 'Moderate'
+                    : 'Easy'
+          }
+        </div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-namek-green/20">
+        <div class="text-3xl mb-2">🌟</div>
+        <div class="text-namek-green font-semibold">Status</div>
+        <div class="text-white">
+          {transformation.deletedAt ? 'Lost' : 'Active'}
+        </div>
+      </div>
+    </div>
+
+    <!-- Transformation Lore -->
+    <section class="mb-12 bg-gray-800 p-8 rounded-lg border border-saiyan-yellow/20">
+      <h2 class="text-3xl font-manga text-saiyan-yellow mb-6 text-center">Transformation Lore</h2>
+      <div class="prose prose-invert max-w-none">
+        <p class="text-gray-300 text-lg leading-relaxed mb-6">
+          {
+            transformation.name.includes('Super Saiyan')
+              ? "The legendary Super Saiyan transformation is born from intense emotion and rigorous training. This form multiplies the user's power exponentially, transforming their hair golden and their aura blazing with energy. The transformation is triggered by overwhelming rage or the need to protect loved ones."
+              : transformation.name.includes('Great Ape')
+                ? 'The Great Ape form is a primal transformation that Saiyans undergo when exposed to blutz waves, typically from a full moon. This massive ape-like form increases strength and size dramatically but often comes at the cost of rational thought and control.'
+                : transformation.name.includes('God')
+                  ? 'Divine transformations represent the pinnacle of martial arts, transcending mortal limitations. These forms require divine ki and often the blessing or training from gods themselves. The power granted is beyond comprehension for most mortals.'
+                  : transformation.name.includes('Ultra')
+                    ? "Ultra forms push the boundaries of what's possible, representing mastery over one's own limits. These transformations often require perfect control and understanding of one's power, making them incredibly rare and difficult to achieve."
+                    : transformation.name.includes('Fusion')
+                      ? 'Fusion techniques combine the power of multiple warriors into a single being, creating strength that surpasses the sum of its parts. These transformations require perfect synchronization and trust between the participants.'
+                      : 'This transformation represents a unique evolution of power, achieved through dedication, training, and often extraordinary circumstances. Each form tells a story of growth, struggle, and the endless pursuit of strength.'
+          }
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-xl font-semibold text-dragon-gold mb-3">🎯 Requirements</h3>
+            <ul class="text-gray-300 space-y-2">
+              <li>
+                • {
+                  powerStars >= 4
+                    ? 'Divine training or extreme circumstances'
+                    : 'Intense emotional trigger or dedicated training'
+                }
+              </li>
+              <li>• {powerStars >= 3 ? 'Mastery of previous forms' : 'Basic ki control'}</li>
+              <li>
+                • {powerStars >= 4 ? 'Pure heart or unwavering determination' : 'Strong willpower'}
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold text-dragon-gold mb-3">⚡ Effects</h3>
+            <ul class="text-gray-300 space-y-2">
+              <li>• Dramatic increase in strength and speed</li>
+              <li>• Enhanced ki output and energy projection</li>
+              <li>
+                • {powerStars >= 4 ? 'Reality-altering power levels' : 'Improved combat abilities'}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Transformations -->
+    <section>
+      <h2 class="text-3xl font-manga text-saiyan-yellow mb-6 text-center">Discover More Power</h2>
+      <div class="text-center">
+        <a
+          href="/transformations"
+          class="bg-saiyan-gradient text-gray-900 px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        >
+          Explore All Transformations
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>

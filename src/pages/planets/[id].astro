@@ -1,0 +1,207 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CharacterCard from '../../components/CharacterCard.astro';
+import { dragonBallApi } from '../../utils/api';
+
+export async function getStaticPaths() {
+  try {
+    // Fetch all planets to generate static paths
+    const response = await dragonBallApi.getAllPlanets({ limit: 100 });
+    const planets = response?.items || [];
+
+    if (!planets.length) {
+      console.warn('No planets found for static paths generation');
+      return [];
+    }
+
+    return planets.map((planet) => ({
+      params: { id: planet.id.toString() },
+    }));
+  } catch (error) {
+    console.error('Error fetching planets for static paths:', error);
+    return [];
+  }
+}
+
+const { id } = Astro.params;
+if (!id) {
+  throw new Error('Planet ID is required');
+}
+
+let planet;
+try {
+  planet = await dragonBallApi.getPlanetById(parseInt(id));
+} catch (error) {
+  console.error(`Error fetching planet ${id}:`, error);
+  throw new Error(`Planet with ID ${id} not found`);
+}
+
+if (!planet) {
+  throw new Error(`Planet with ID ${id} not found`);
+}
+---
+
+<Layout title={`${planet.name} - Dragon Ball Planet`} description={planet.description}>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Back Button -->
+    <div class="mb-6">
+      <a
+        href="/planets"
+        class="inline-flex items-center text-namek-green hover:text-green-400 transition-colors"
+      >
+        ← Back to Planets
+      </a>
+    </div>
+
+    <!-- Planet Header -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <div class="relative">
+        <img
+          src={planet.image}
+          alt={planet.name}
+          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-namek-green/20"
+        />
+        <div
+          class={`absolute top-4 right-4 px-3 py-1 rounded-full text-white font-bold ${
+            planet.isDestroyed ? 'bg-dragon-red' : 'bg-namek-green'
+          }`}
+        >
+          {planet.isDestroyed ? '💥 Destroyed' : '🌍 Active'}
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-5xl font-manga text-namek-green mb-4">{planet.name}</h1>
+          <div class="flex items-center space-x-4 text-lg">
+            <span
+              class={`inline-flex items-center px-4 py-2 rounded-full font-semibold ${
+                planet.isDestroyed ? 'bg-dragon-red text-white' : 'bg-namek-green text-white'
+              }`}
+            >
+              {planet.isDestroyed ? '🚫 Destroyed Planet' : '✨ Thriving World'}
+            </span>
+          </div>
+        </div>
+
+        {
+          planet.description && (
+            <div class="bg-gray-800 p-6 rounded-lg border border-namek-green/20">
+              <h3 class="text-namek-green font-semibold mb-3 text-xl">Planet Overview</h3>
+              <p class="text-gray-300 leading-relaxed text-lg">{planet.description}</p>
+            </div>
+          )
+        }
+
+        {
+          planet.characters && planet.characters.length > 0 && (
+            <div class="bg-gray-800 p-6 rounded-lg border border-dragon-gold/20">
+              <h3 class="text-dragon-gold font-semibold mb-3 text-xl">Notable Inhabitants</h3>
+              <p class="text-2xl font-dragon text-white">
+                {planet.characters.length}
+                <span class="text-lg text-gray-300">legendary characters</span>
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <!-- Planet Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-namek-green/20">
+        <div class="text-4xl mb-3">{planet.isDestroyed ? '💥' : '🌍'}</div>
+        <div class="text-namek-green font-semibold text-lg">Status</div>
+        <div class="text-white text-xl">
+          {planet.isDestroyed ? 'Destroyed' : 'Active'}
+        </div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+        <div class="text-4xl mb-3">👥</div>
+        <div class="text-dragon-gold font-semibold text-lg">Known Inhabitants</div>
+        <div class="text-white text-xl">
+          {planet.characters?.length || 0} characters
+        </div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-blue/20">
+        <div class="text-4xl mb-3">🌌</div>
+        <div class="text-dragon-blue font-semibold text-lg">Galaxy Sector</div>
+        <div class="text-white text-xl">
+          {
+            planet.name.includes('Earth')
+              ? 'North Galaxy'
+              : planet.name.includes('Namek')
+                ? 'South Galaxy'
+                : 'Unknown Sector'
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Characters from this Planet -->
+    {
+      planet.characters && planet.characters.length > 0 && (
+        <section class="mb-12">
+          <h2 class="text-3xl font-manga text-dragon-gold mb-6 text-center">
+            Warriors from {planet.name}
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {planet.characters.map((character) => (
+              <CharacterCard character={character} showDetails={true} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Planet Facts -->
+    <section class="mb-12 bg-gray-800 p-8 rounded-lg border border-namek-green/20">
+      <h2 class="text-3xl font-manga text-namek-green mb-6 text-center">Planet Facts</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-xl font-semibold text-dragon-gold mb-3">🏞️ Environment</h3>
+          <p class="text-gray-300">
+            {
+              planet.name.includes('Earth')
+                ? 'Diverse biomes with oceans, continents, and varied climates. Perfect for supporting diverse life forms.'
+                : planet.name.includes('Namek')
+                  ? 'Green skies with blue grass. Three suns provide constant daylight. Peaceful and serene environment.'
+                  : planet.name.includes('Vegeta')
+                    ? 'Harsh, rocky terrain with high gravity. Extreme conditions that forged the warrior Saiyan race.'
+                    : 'A unique world with its own distinct characteristics and environments.'
+            }
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xl font-semibold text-dragon-gold mb-3">⚡ Significance</h3>
+          <p class="text-gray-300">
+            {
+              planet.name.includes('Earth')
+                ? 'Central to many Dragon Ball adventures. Home to the Z Fighters and numerous epic battles.'
+                : planet.name.includes('Namek')
+                  ? 'Birthplace of the original Dragon Balls. Source of immense spiritual power and wisdom.'
+                  : planet.name.includes('Vegeta')
+                    ? 'Former homeworld of the Saiyan race. Symbol of pride and warrior spirit.'
+                    : 'An important location in the Dragon Ball universe with its own unique role in the saga.'
+            }
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Explore More -->
+    <section>
+      <h2 class="text-3xl font-manga text-namek-green mb-6 text-center">Explore More Worlds</h2>
+      <div class="text-center">
+        <a
+          href="/planets"
+          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        >
+          Discover All Planets
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>

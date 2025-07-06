@@ -1,0 +1,184 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TransformationCard from '../../components/TransformationCard.astro';
+import { dragonBallApi } from '../../utils/api';
+
+export async function getStaticPaths() {
+  try {
+    // Fetch all characters to generate static paths
+    const response = await dragonBallApi.getAllCharacters({ limit: 100 });
+    const characters = response?.items || [];
+
+    if (!characters.length) {
+      console.warn('No characters found for static paths generation');
+      return [];
+    }
+
+    return characters.map((character) => ({
+      params: { id: character.id.toString() },
+    }));
+  } catch (error) {
+    console.error('Error fetching characters for static paths:', error);
+    return [];
+  }
+}
+
+const { id } = Astro.params;
+if (!id) {
+  throw new Error('Character ID is required');
+}
+
+let character;
+try {
+  character = await dragonBallApi.getCharacterById(parseInt(id));
+} catch (error) {
+  console.error(`Error fetching character ${id}:`, error);
+  throw new Error(`Character with ID ${id} not found`);
+}
+
+if (!character) {
+  throw new Error(`Character with ID ${id} not found`);
+}
+---
+
+<Layout title={`${character.name} - Dragon Ball Character`} description={character.description}>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Back Button -->
+    <div class="mb-6">
+      <a
+        href="/characters"
+        class="inline-flex items-center text-dragon-gold hover:text-dragon-orange transition-colors"
+      >
+        ← Back to Characters
+      </a>
+    </div>
+
+    <!-- Character Header -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <div class="relative">
+        <img
+          src={character.image}
+          alt={character.name}
+          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-dragon-gold/20"
+        />
+        <div
+          class="absolute top-4 right-4 bg-dragon-orange px-3 py-1 rounded-full text-white font-bold"
+        >
+          {character.race}
+        </div>
+        {
+          character.gender && (
+            <div class="absolute top-4 left-4 bg-dragon-blue px-3 py-1 rounded-full text-white font-bold">
+              {character.gender}
+            </div>
+          )
+        }
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-5xl font-manga text-dragon-gold mb-2">{character.name}</h1>
+          {
+            character.affiliation && (
+              <span class="inline-block bg-dragon-blue px-4 py-2 rounded-full text-white font-semibold">
+                {character.affiliation}
+              </span>
+            )
+          }
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-gray-800 p-4 rounded-lg border border-dragon-gold/20">
+            <h3 class="text-dragon-orange font-semibold mb-2">Base Ki</h3>
+            <p class="text-2xl font-dragon text-white">{character.ki}</p>
+          </div>
+          <div class="bg-gray-800 p-4 rounded-lg border border-dragon-gold/20">
+            <h3 class="text-dragon-orange font-semibold mb-2">Maximum Ki</h3>
+            <p class="text-2xl font-dragon text-white">{character.maxKi}</p>
+          </div>
+        </div>
+
+        {
+          character.originPlanet && (
+            <div class="bg-gray-800 p-4 rounded-lg border border-namek-green/20">
+              <h3 class="text-namek-green font-semibold mb-2">Origin Planet</h3>
+              <a
+                href={`/planets/${character.originPlanet.id}`}
+                class="text-xl text-white hover:text-namek-green transition-colors"
+              >
+                {character.originPlanet.name} →
+              </a>
+            </div>
+          )
+        }
+
+        {
+          character.description && (
+            <div class="bg-gray-800 p-6 rounded-lg border border-dragon-gold/20">
+              <h3 class="text-dragon-gold font-semibold mb-3 text-xl">Biography</h3>
+              <p class="text-gray-300 leading-relaxed">{character.description}</p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <!-- Character Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+        <div class="text-3xl mb-2">🥊</div>
+        <div class="text-dragon-gold font-semibold">Race</div>
+        <div class="text-white">{character.race}</div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+        <div class="text-3xl mb-2">⚧️</div>
+        <div class="text-dragon-gold font-semibold">Gender</div>
+        <div class="text-white">{character.gender || 'Unknown'}</div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+        <div class="text-3xl mb-2">🏆</div>
+        <div class="text-dragon-gold font-semibold">Affiliation</div>
+        <div class="text-white">{character.affiliation || 'None'}</div>
+      </div>
+
+      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+        <div class="text-3xl mb-2">⚡</div>
+        <div class="text-dragon-gold font-semibold">Transformations</div>
+        <div class="text-white">{character.transformations?.length || 0}</div>
+      </div>
+    </div>
+
+    <!-- Transformations -->
+    {
+      character.transformations && character.transformations.length > 0 && (
+        <section class="mb-12">
+          <h2 class="text-3xl font-manga text-saiyan-yellow mb-6 text-center">
+            Transformations & Forms
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {character.transformations.map((transformation) => (
+              <TransformationCard transformation={transformation} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Related Characters -->
+    <section>
+      <h2 class="text-3xl font-manga text-dragon-gold mb-6 text-center">
+        More Warriors to Discover
+      </h2>
+      <div class="text-center">
+        <a
+          href="/characters"
+          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        >
+          Explore All Characters
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>

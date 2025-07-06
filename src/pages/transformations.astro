@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TransformationCard from '../components/TransformationCard.astro';
+import Pagination from '../components/Pagination.astro';
+import { dragonBallApi } from '../utils/api';
+import type { Transformation, ApiResponse } from '../types/api';
+
+// Get query parameters
+const url = new URL(Astro.request.url);
+const page = parseInt(url.searchParams.get('page') || '1');
+const name = url.searchParams.get('name') || '';
+
+// Fetch transformations with filters
+const params = {
+  page,
+  limit: 12,
+  ...(name && { name }),
+};
+
+let transformations: Transformation[] = [];
+let meta = {
+  totalItems: 0,
+  itemCount: 0,
+  itemsPerPage: 12,
+  totalPages: 0,
+  currentPage: page,
+};
+
+try {
+  const response = await dragonBallApi.getAllTransformations(params);
+  transformations = response?.items || [];
+  meta = response?.meta || meta;
+} catch (error) {
+  console.error('Error fetching transformations:', error);
+  // Keep default values
+}
+---
+
+<Layout title="Dragon Ball Transformations">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-manga text-saiyan-yellow mb-4">Epic Transformations</h1>
+      <p class="text-xl text-gray-300">
+        Witness the incredible power of legendary forms and transcendent states
+      </p>
+    </div>
+
+    <!-- Search -->
+    <div class="bg-gray-800 p-6 rounded-lg mb-8 border border-saiyan-yellow/20">
+      <h2 class="text-2xl font-dragon text-saiyan-yellow mb-4">Search Transformations</h2>
+
+      <form class="flex gap-4">
+        <div class="flex-1">
+          <input
+            type="text"
+            name="name"
+            value={name}
+            placeholder="Search transformations by name..."
+            class="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-saiyan-yellow focus:outline-none text-lg"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="bg-saiyan-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+        >
+          ⚡ Search
+        </button>
+      </form>
+    </div>
+
+    <!-- Results Info -->
+    <div class="flex justify-between items-center mb-6">
+      <p class="text-gray-300">
+        Showing {meta.itemCount} of {meta.totalItems} transformations
+        {name ? ' (filtered)' : ''}
+      </p>
+      <p class="text-gray-300">
+        Page {meta.currentPage} of {meta.totalPages}
+      </p>
+    </div>
+
+    <!-- Transformations Grid -->
+    {
+      transformations.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+          {transformations.map((transformation) => (
+            <TransformationCard transformation={transformation} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <div class="text-6xl mb-4">⚡</div>
+          <h3 class="text-2xl font-manga text-saiyan-yellow mb-2">No Transformations Found</h3>
+          <p class="text-gray-300 mb-6">Try adjusting your search terms</p>
+          <a
+            href="/transformations"
+            class="bg-saiyan-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+          >
+            Reset Search
+          </a>
+        </div>
+      )
+    }
+
+    <!-- Pagination -->
+    {
+      transformations.length > 0 && (
+        <Pagination
+          currentPage={meta.currentPage}
+          totalPages={meta.totalPages}
+          baseUrl="/transformations"
+        />
+      )
+    }
+
+    <!-- Transformation Types -->
+    <section class="mt-16 bg-gray-800 p-8 rounded-lg border border-saiyan-yellow/20">
+      <h2 class="text-3xl font-manga text-saiyan-yellow mb-8 text-center">Types of Power</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center p-6 bg-gray-700 rounded-lg">
+          <div class="text-4xl mb-3">🦍</div>
+          <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">Great Ape</h3>
+          <p class="text-gray-300 text-sm">Primal Saiyan transformation triggered by moonlight</p>
+        </div>
+
+        <div class="text-center p-6 bg-gray-700 rounded-lg">
+          <div class="text-4xl mb-3">⚡</div>
+          <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">Super Saiyan</h3>
+          <p class="text-gray-300 text-sm">Legendary form born from intense emotion and training</p>
+        </div>
+
+        <div class="text-center p-6 bg-gray-700 rounded-lg">
+          <div class="text-4xl mb-3">👑</div>
+          <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">God Forms</h3>
+          <p class="text-gray-300 text-sm">Divine transformations beyond mortal limits</p>
+        </div>
+
+        <div class="text-center p-6 bg-gray-700 rounded-lg">
+          <div class="text-4xl mb-3">🎭</div>
+          <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">Fusion</h3>
+          <p class="text-gray-300 text-sm">Combination of multiple warriors into one being</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Power Levels -->
+    <section class="mt-16">
+      <h2 class="text-3xl font-manga text-dragon-gold mb-8 text-center">Power Level Guide</h2>
+      <div class="bg-gray-800 p-8 rounded-lg border border-dragon-gold/20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <div class="text-3xl mb-2 text-green-400">⭐</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Base Forms</h3>
+            <p class="text-gray-300 text-sm">Natural state of warriors</p>
+          </div>
+
+          <div class="text-center">
+            <div class="text-3xl mb-2 text-yellow-400">⭐⭐⭐</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Advanced Forms</h3>
+            <p class="text-gray-300 text-sm">Transformations requiring training</p>
+          </div>
+
+          <div class="text-center">
+            <div class="text-3xl mb-2 text-red-400">⭐⭐⭐⭐⭐</div>
+            <h3 class="text-lg font-semibold text-white mb-2">Ultimate Forms</h3>
+            <p class="text-gray-300 text-sm">Legendary and divine transformations</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

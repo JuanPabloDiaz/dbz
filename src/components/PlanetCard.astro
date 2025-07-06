@@ -1,0 +1,60 @@
+---
+import type { Planet } from '../types/api';
+
+export interface Props {
+  planet: Planet;
+  showDetails?: boolean;
+}
+
+const { planet, showDetails = false } = Astro.props;
+---
+
+<div
+  class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-namek-green/20"
+>
+  <div class="relative">
+    <img src={planet.image} alt={planet.name} class="w-full h-64 object-cover" loading="lazy" />
+    <div
+      class={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold ${
+        planet.isDestroyed ? 'bg-dragon-red' : 'bg-namek-green'
+      }`}
+    >
+      {planet.isDestroyed ? 'Destroyed' : 'Active'}
+    </div>
+  </div>
+
+  <div class="p-4">
+    <h3 class="text-xl font-manga text-namek-green mb-2">{planet.name}</h3>
+
+    {
+      showDetails && planet.description && (
+        <p class="text-gray-300 text-sm mb-3 line-clamp-3">{planet.description}</p>
+      )
+    }
+
+    {
+      planet.characters && planet.characters.length > 0 && (
+        <div class="mb-3">
+          <span class="text-dragon-gold font-semibold text-sm">Characters:</span>
+          <span class="text-white ml-1 text-sm">{planet.characters.length}</span>
+        </div>
+      )
+    }
+
+    <div class="flex justify-between items-center mt-4">
+      <a
+        href={`/planets/${planet.id}`}
+        class="bg-gradient-to-r from-namek-green to-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-sm"
+      >
+        Explore Planet
+      </a>
+
+      <div class="flex items-center space-x-1">
+        <span class="text-namek-green">🌍</span>
+        <span class="text-sm text-gray-400">
+          {planet.isDestroyed ? 'Lost' : 'Thriving'}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

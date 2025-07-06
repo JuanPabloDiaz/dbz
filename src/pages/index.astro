@@ -1,0 +1,239 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CharacterCard from '../components/CharacterCard.astro';
+import PlanetCard from '../components/PlanetCard.astro';
+import TransformationCard from '../components/TransformationCard.astro';
+import { dragonBallApi } from '../utils/api';
+import type { Character, Planet, Transformation, ApiResponse } from '../types/api';
+
+// Fetch featured content with error handling
+let featuredCharacters: Character[] = [];
+let featuredPlanets: Planet[] = [];
+let featuredTransformations: Transformation[] = [];
+let charactersResponse: ApiResponse<Character> = {
+  items: [],
+  meta: { totalItems: 0, itemCount: 0, itemsPerPage: 0, totalPages: 0, currentPage: 1 },
+  links: { first: '', last: '' },
+};
+let planetsResponse: ApiResponse<Planet> = {
+  items: [],
+  meta: { totalItems: 0, itemCount: 0, itemsPerPage: 0, totalPages: 0, currentPage: 1 },
+  links: { first: '', last: '' },
+};
+let transformationsResponse: ApiResponse<Transformation> = {
+  items: [],
+  meta: { totalItems: 0, itemCount: 0, itemsPerPage: 0, totalPages: 0, currentPage: 1 },
+  links: { first: '', last: '' },
+};
+
+try {
+  const responses = await Promise.allSettled([
+    dragonBallApi.getAllCharacters({ limit: 6 }),
+    dragonBallApi.getAllPlanets({ limit: 3 }),
+    dragonBallApi.getAllTransformations({ limit: 3 }),
+  ]);
+
+  if (responses[0].status === 'fulfilled') {
+    charactersResponse = responses[0].value;
+    featuredCharacters = charactersResponse.items || [];
+  }
+
+  if (responses[1].status === 'fulfilled') {
+    planetsResponse = responses[1].value;
+    featuredPlanets = planetsResponse.items || [];
+  }
+
+  if (responses[2].status === 'fulfilled') {
+    transformationsResponse = responses[2].value;
+    featuredTransformations = transformationsResponse.items || [];
+  }
+} catch (error) {
+  console.error('Error fetching featured content:', error);
+}
+---
+
+<Layout title="Dragon Ball Universe - Home">
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-dragon-orange/20 via-dragon-blue/20 to-dragon-gold/20"
+    >
+    </div>
+    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+      <h1 class="text-6xl md:text-8xl font-manga text-dragon-gold mb-6 animate-glow">
+        Dragon Ball
+      </h1>
+      <h2 class="text-3xl md:text-5xl font-dragon text-white mb-8">Universe Explorer</h2>
+      <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+        Dive into the incredible world of Dragon Ball! Discover powerful warriors, explore
+        mysterious planets, and witness legendary transformations.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/characters"
+          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        >
+          🥊 Explore Characters
+        </a>
+        <a
+          href="/planets"
+          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        >
+          🌍 Discover Planets
+        </a>
+        <a
+          href="/transformations"
+          class="bg-saiyan-gradient text-gray-900 px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        >
+          ⚡ View Transformations
+        </a>
+      </div>
+    </div>
+
+    <!-- Floating Dragon Balls -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute top-20 left-10 w-16 h-16 bg-dragon-gold rounded-full animate-float opacity-60"
+      >
+      </div>
+      <div
+        class="absolute top-40 right-20 w-12 h-12 bg-dragon-orange rounded-full animate-float opacity-60"
+        style="animation-delay: 1s;"
+      >
+      </div>
+      <div
+        class="absolute bottom-40 left-20 w-20 h-20 bg-dragon-red rounded-full animate-float opacity-60"
+        style="animation-delay: 2s;"
+      >
+      </div>
+      <div
+        class="absolute bottom-20 right-10 w-14 h-14 bg-dragon-blue rounded-full animate-float opacity-60"
+        style="animation-delay: 0.5s;"
+      >
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Characters -->
+  <section class="py-16 bg-gray-900/50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-manga text-dragon-gold mb-4">Featured Warriors</h2>
+        <p class="text-xl text-gray-300">Meet some of the most powerful fighters in the universe</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          featuredCharacters && featuredCharacters.length > 0 ? (
+            featuredCharacters.map((character) => (
+              <CharacterCard character={character} showDetails={true} />
+            ))
+          ) : (
+            <div class="col-span-full text-center py-8">
+              <p class="text-gray-400">Loading characters...</p>
+            </div>
+          )
+        }
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="/characters"
+          class="inline-block bg-dragon-gradient text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+        >
+          View All Characters →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Planets -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-manga text-namek-green mb-4">Mystical Worlds</h2>
+        <p class="text-xl text-gray-300">Explore the diverse planets across the galaxy</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {
+          featuredPlanets && featuredPlanets.length > 0 ? (
+            featuredPlanets.map((planet) => <PlanetCard planet={planet} showDetails={true} />)
+          ) : (
+            <div class="col-span-full text-center py-8">
+              <p class="text-gray-400">Loading planets...</p>
+            </div>
+          )
+        }
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="/planets"
+          class="inline-block bg-gradient-to-r from-namek-green to-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+        >
+          Explore All Planets →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Transformations -->
+  <section class="py-16 bg-gray-900/50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-manga text-saiyan-yellow mb-4">Epic Transformations</h2>
+        <p class="text-xl text-gray-300">Witness the incredible power of legendary forms</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {
+          featuredTransformations && featuredTransformations.length > 0 ? (
+            featuredTransformations.map((transformation) => (
+              <TransformationCard transformation={transformation} />
+            ))
+          ) : (
+            <div class="col-span-full text-center py-8">
+              <p class="text-gray-400">Loading transformations...</p>
+            </div>
+          )
+        }
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="/transformations"
+          class="inline-block bg-saiyan-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+        >
+          View All Transformations →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="bg-gray-800 p-8 rounded-lg border border-dragon-gold/20">
+          <div class="text-4xl font-manga text-dragon-gold mb-2">
+            {charactersResponse?.meta?.totalItems || 0}+
+          </div>
+          <div class="text-xl text-white">Legendary Characters</div>
+        </div>
+        <div class="bg-gray-800 p-8 rounded-lg border border-namek-green/20">
+          <div class="text-4xl font-manga text-namek-green mb-2">
+            {planetsResponse?.meta?.totalItems || 0}+
+          </div>
+          <div class="text-xl text-white">Amazing Planets</div>
+        </div>
+        <div class="bg-gray-800 p-8 rounded-lg border border-saiyan-yellow/20">
+          <div class="text-4xl font-manga text-saiyan-yellow mb-2">
+            {transformationsResponse?.meta?.totalItems || 0}+
+          </div>
+          <div class="text-xl text-white">Epic Transformations</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

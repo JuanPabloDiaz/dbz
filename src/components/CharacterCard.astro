@@ -1,0 +1,103 @@
+---
+import type { Character } from '../types/api';
+
+export interface Props {
+  character: Character;
+  showDetails?: boolean;
+}
+
+const { character, showDetails = false } = Astro.props;
+---
+
+<div
+  class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-dragon-gold/20"
+>
+  <div class="relative">
+    <img
+      src={character.image}
+      alt={character.name}
+      class="w-full h-64 object-cover"
+      loading="lazy"
+    />
+    <div class="absolute top-2 right-2 bg-dragon-orange px-2 py-1 rounded-full text-xs font-bold">
+      {character.race}
+    </div>
+    {
+      character.gender && (
+        <div class="absolute top-2 left-2 bg-dragon-blue px-2 py-1 rounded-full text-xs font-bold">
+          {character.gender}
+        </div>
+      )
+    }
+  </div>
+
+  <div class="p-4">
+    <h3 class="text-xl font-manga text-dragon-gold mb-2">{character.name}</h3>
+
+    <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+      <div class="bg-gray-700 p-2 rounded">
+        <span class="text-dragon-orange font-semibold">Ki:</span>
+        <span class="text-white ml-1">{character.ki}</span>
+      </div>
+      <div class="bg-gray-700 p-2 rounded">
+        <span class="text-dragon-orange font-semibold">Max Ki:</span>
+        <span class="text-white ml-1">{character.maxKi}</span>
+      </div>
+    </div>
+
+    {
+      character.affiliation && (
+        <div class="mb-3">
+          <span class="inline-block bg-dragon-blue px-2 py-1 rounded-full text-xs font-semibold">
+            {character.affiliation}
+          </span>
+        </div>
+      )
+    }
+
+    {
+      showDetails && character.description && (
+        <p class="text-gray-300 text-sm mb-3 line-clamp-3">{character.description}</p>
+      )
+    }
+
+    {
+      character.originPlanet && (
+        <div class="mb-3">
+          <span class="text-namek-green font-semibold text-sm">Origin:</span>
+          <span class="text-white ml-1 text-sm">{character.originPlanet.name}</span>
+        </div>
+      )
+    }
+
+    {
+      character.transformations && character.transformations.length > 0 && (
+        <div class="mb-3">
+          <span class="text-saiyan-yellow font-semibold text-sm">Transformations:</span>
+          <span class="text-white ml-1 text-sm">{character.transformations.length}</span>
+        </div>
+      )
+    }
+
+    <div class="flex justify-between items-center mt-4">
+      <a
+        href={`/characters/${character.id}`}
+        class="bg-dragon-gradient text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-sm"
+      >
+        View Details
+      </a>
+
+      <div class="flex space-x-1">
+        {
+          Array.from({ length: 5 }).map((_, i) => (
+            <span
+              class={`text-lg ${i < Math.min(parseInt(character.ki.replace(/\D/g, '')) / 1000000000, 5) ? 'text-dragon-gold' : 'text-gray-600'}`}
+            >
+              ⭐
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>

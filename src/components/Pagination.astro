@@ -1,0 +1,92 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+const generatePageNumbers = (): number[] => {
+  const pages: number[] = [];
+  const maxVisiblePages = 5;
+
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+  if (endPage - startPage + 1 < maxVisiblePages) {
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
+  }
+
+  return pages;
+};
+
+const pageNumbers = generatePageNumbers();
+---
+
+{
+  totalPages > 1 && (
+    <nav class="flex justify-center items-center space-x-2 mt-8">
+      {currentPage > 1 && (
+        <a
+          href={`${baseUrl}?page=${currentPage - 1}`}
+          class="px-3 py-2 bg-dragon-blue text-white rounded-lg hover:bg-dragon-orange transition-colors"
+        >
+          Previous
+        </a>
+      )}
+
+      {pageNumbers[0] > 1 && (
+        <>
+          <a
+            href={`${baseUrl}?page=1`}
+            class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors"
+          >
+            1
+          </a>
+          {pageNumbers[0] > 2 && <span class="text-gray-400">...</span>}
+        </>
+      )}
+
+      {pageNumbers.map((page) => (
+        <a
+          href={`${baseUrl}?page=${page}`}
+          class={`px-3 py-2 rounded-lg transition-colors ${
+            page === currentPage
+              ? 'bg-dragon-gold text-gray-900 font-bold'
+              : 'bg-gray-700 text-white hover:bg-dragon-orange'
+          }`}
+        >
+          {page}
+        </a>
+      ))}
+
+      {pageNumbers[pageNumbers.length - 1] < totalPages && (
+        <>
+          {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
+            <span class="text-gray-400">...</span>
+          )}
+          <a
+            href={`${baseUrl}?page=${totalPages}`}
+            class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors"
+          >
+            {totalPages}
+          </a>
+        </>
+      )}
+
+      {currentPage < totalPages && (
+        <a
+          href={`${baseUrl}?page=${currentPage + 1}`}
+          class="px-3 py-2 bg-dragon-blue text-white rounded-lg hover:bg-dragon-orange transition-colors"
+        >
+          Next
+        </a>
+      )}
+    </nav>
+  )
+}
