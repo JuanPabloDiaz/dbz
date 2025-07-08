@@ -53,14 +53,12 @@ const affiliations = [
   <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="text-center mb-12">
-      <h1 class="text-5xl font-manga text-dragon-gold mb-4">Legendary Warriors</h1>
+      <h1 class="text-5xl font-manga text-dragon-gold mb-4">Dragon Ball Characters</h1>
       <p class="text-xl text-gray-300">Discover the most powerful fighters across the universe</p>
     </div>
 
     <!-- Filters -->
-    <div class="bg-gray-800 p-6 rounded-lg mb-8 border border-dragon-gold/20">
-      <h2 class="text-2xl font-dragon text-dragon-gold mb-4">Filter Characters</h2>
-
+    <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg mb-8 border border-dragon-gold/30">
       <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div>
           <label class="block text-white font-semibold mb-2">Name</label>
@@ -68,7 +66,7 @@ const affiliations = [
             type="text"
             name="name"
             placeholder="Search by name..."
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none placeholder-gray-400"
           />
         </div>
 
@@ -76,7 +74,7 @@ const affiliations = [
           <label class="block text-white font-semibold mb-2">Race</label>
           <select
             name="race"
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Races</option>
             {
@@ -91,7 +89,7 @@ const affiliations = [
           <label class="block text-white font-semibold mb-2">Gender</label>
           <select
             name="gender"
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Genders</option>
             {
@@ -106,7 +104,7 @@ const affiliations = [
           <label class="block text-white font-semibold mb-2">Affiliation</label>
           <select
             name="affiliation"
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Affiliations</option>
             {
@@ -120,7 +118,7 @@ const affiliations = [
         <div class="flex items-end">
           <button
             type="submit"
-            class="w-full bg-dragon-gradient text-white p-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+            class="w-full bg-dragon-gradient text-white p-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-dragon-gold/25 transition-all duration-300"
           >
             Filter
           </button>
@@ -131,10 +129,10 @@ const affiliations = [
     <!-- Results Info -->
     <div class="flex justify-between items-center mb-6">
       <p class="text-gray-300 results-info">
-        Showing {meta.itemCount} of {meta.totalItems} characters
+        Showing <span class="text-dragon-gold font-semibold">{meta.itemCount}</span> of <span class="text-dragon-gold font-semibold">{meta.totalItems}</span> characters
       </p>
       <p class="text-gray-300 page-info">
-        Page {meta.currentPage} of {meta.totalPages}
+        Page <span class="text-dragon-gold font-semibold">{meta.currentPage}</span> of <span class="text-dragon-gold font-semibold">{meta.totalPages}</span>
       </p>
     </div>
 
@@ -161,5 +159,12 @@ const affiliations = [
     }
   </div>
 
-  <script src="../scripts/pagination.js"></script>
+  <script src="/pagination.js" is:inline></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', function() {
+      if (window.DragonBallPagination) {
+        window.DragonBallPagination.initCharacters();
+      }
+    });
+  </script>
 </Layout>
