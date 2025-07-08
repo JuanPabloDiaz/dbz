@@ -1,5 +1,6 @@
 ---
 import type { Planet } from '../types/api';
+import Icon from './Icon.astro';
 
 export interface Props {
   planet: Planet;
@@ -50,7 +51,7 @@ const { planet, showDetails = false } = Astro.props;
       </a>
 
       <div class="flex items-center space-x-1">
-        <span class="text-namek-green">🌍</span>
+        <Icon name="🌍" size="md" color="namek-green" />
         <span class="text-sm text-gray-400">
           {planet.isDestroyed ? 'Lost' : 'Thriving'}
         </span>

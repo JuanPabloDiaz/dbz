@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
 ---
 
 <Layout title="404 - Page Not Found | Dragon Ball Universe">
@@ -19,21 +20,24 @@ import Layout from '../layouts/Layout.astro';
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
         <a
           href="/"
-          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center"
+          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center gap-3"
         >
-          🏠 Return Home
+          <Icon name="🏠" size="lg" color="white" />
+          Return Home
         </a>
         <a
           href="/characters"
-          class="bg-gradient-to-r from-dragon-blue to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center"
+          class="bg-gradient-to-r from-dragon-blue to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center gap-3"
         >
-          🥊 View Characters
+          <Icon name="🥊" size="lg" color="white" />
+          View Characters
         </a>
         <a
           href="/planets"
-          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center"
+          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center gap-3"
         >
-          🌍 Explore Planets
+          <Icon name="🌍" size="lg" color="white" />
+          Explore Planets
         </a>
       </div>
 
@@ -42,7 +46,9 @@ import Layout from '../layouts/Layout.astro';
         <h3 class="text-2xl font-manga text-dragon-gold mb-6">Where Could It Be?</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="text-center p-6 bg-gray-700 rounded-lg">
-            <div class="text-4xl mb-3">🐉</div>
+            <div class="flex justify-center mb-3">
+              <Icon name="🐉" size="4xl" color="dragon-gold" />
+            </div>
             <h4 class="text-lg font-semibold text-dragon-gold mb-2">Shenron's Domain</h4>
             <p class="text-gray-300 text-sm">
               Maybe the Eternal Dragon took it to another dimension?
@@ -50,13 +56,17 @@ import Layout from '../layouts/Layout.astro';
           </div>
 
           <div class="text-center p-6 bg-gray-700 rounded-lg">
-            <div class="text-4xl mb-3">💥</div>
+            <div class="flex justify-center mb-3">
+              <Icon name="💥" size="4xl" color="dragon-gold" />
+            </div>
             <h4 class="text-lg font-semibold text-dragon-gold mb-2">Kamehameha'd</h4>
             <p class="text-gray-300 text-sm">This page might have been caught in a energy wave!</p>
           </div>
 
           <div class="text-center p-6 bg-gray-700 rounded-lg">
-            <div class="text-4xl mb-3">🌌</div>
+            <div class="flex justify-center mb-3">
+              <Icon name="🌌" size="4xl" color="dragon-gold" />
+            </div>
             <h4 class="text-lg font-semibold text-dragon-gold mb-2">Other Universe</h4>
             <p class="text-gray-300 text-sm">Perhaps it exists in one of the other 12 universes?</p>
           </div>
@@ -70,15 +80,18 @@ import Layout from '../layouts/Layout.astro';
           Use the search features on our main pages to find characters, planets, or transformations!
         </p>
         <div class="flex flex-wrap gap-2 justify-center">
-          <span class="bg-dragon-orange/20 text-dragon-orange px-3 py-1 rounded-full text-sm"
-            >🔍 Search Characters</span
-          >
-          <span class="bg-namek-green/20 text-namek-green px-3 py-1 rounded-full text-sm"
-            >🔍 Search Planets</span
-          >
-          <span class="bg-saiyan-yellow/20 text-saiyan-yellow px-3 py-1 rounded-full text-sm"
-            >🔍 Search Transformations</span
-          >
+          <span class="bg-dragon-orange/20 text-dragon-orange px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            <Icon name="🔍" size="sm" />
+            Search Characters
+          </span>
+          <span class="bg-namek-green/20 text-namek-green px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            <Icon name="🔍" size="sm" />
+            Search Planets
+          </span>
+          <span class="bg-saiyan-yellow/20 text-saiyan-yellow px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            <Icon name="🔍" size="sm" />
+            Search Transformations
+          </span>
         </div>
       </div>
 

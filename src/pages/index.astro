@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import CharacterCard from '../components/CharacterCard.astro';
 import PlanetCard from '../components/PlanetCard.astro';
 import TransformationCard from '../components/TransformationCard.astro';
+import Icon from '../components/Icon.astro';
 import { dragonBallApi } from '../utils/api';
 import type { Character, Planet, Transformation, ApiResponse } from '../types/api';
 
@@ -63,7 +64,7 @@ try {
       <h1 class="text-6xl md:text-8xl font-manga text-dragon-gold mb-6 animate-glow">
         Dragon Ball
       </h1>
-      <h2 class="text-3xl md:text-5xl font-dragon text-white mb-8">Universe Explorer</h2>
+      <h2 class="text-3xl md:text-5xl font-dragon text-white mb-8">by Juan Diaz</h2>
       <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
         Dive into the incredible world of Dragon Ball! Discover powerful warriors, explore
         mysterious planets, and witness legendary transformations.
@@ -71,21 +72,24 @@ try {
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a
           href="/characters"
-          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3"
         >
-          🥊 Explore Characters
+          <Icon name="🥊" size="lg" color="white" />
+          Explore Characters
         </a>
         <a
           href="/planets"
-          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3"
         >
-          🌍 Discover Planets
+          <Icon name="🌍" size="lg" color="white" />
+          Discover Planets
         </a>
         <a
           href="/transformations"
-          class="bg-saiyan-gradient text-gray-900 px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          class="bg-saiyan-gradient text-gray-900 px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3"
         >
-          ⚡ View Transformations
+          <Icon name="⚡" size="lg" color="gray" />
+          View Transformations
         </a>
       </div>
     </div>

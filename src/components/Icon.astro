@@ -1,0 +1,29 @@
+---
+import { Icon as AstroIcon } from 'astro-icon/components';
+import { getIcon, getIconSize, getIconColor } from '../utils/icons';
+
+export interface Props {
+  name: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
+  color?: string;
+  class?: string;
+  title?: string;
+  ariaLabel?: string;
+}
+
+const {
+  name,
+  size = 'md',
+  color = 'current',
+  class: className = '',
+  title,
+  ariaLabel,
+} = Astro.props;
+
+const iconName = getIcon(name);
+const sizeClass = getIconSize(size);
+const colorClass = getIconColor(color);
+const combinedClass = `${sizeClass} ${colorClass} ${className}`.trim();
+---
+
+<AstroIcon name={iconName} class={combinedClass} title={title} aria-label={ariaLabel} />

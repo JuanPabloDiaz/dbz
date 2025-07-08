@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
 import { dragonBallApi } from '../../utils/api';
 
 export async function getStaticPaths() {
@@ -83,16 +84,19 @@ const powerStars = getPowerStars(transformation.ki);
               <div class="flex space-x-1">
                 {
                   Array.from({ length: 5 }).map((_, i) => (
-                    <span
-                      class={`text-2xl ${i < powerStars ? 'text-saiyan-yellow animate-energy-pulse' : 'text-gray-600'}`}
-                    >
-                      ⭐
-                    </span>
+                    <Icon
+                      name="⭐"
+                      size="2xl"
+                      color={i < powerStars ? 'saiyan-yellow' : 'gray'}
+                      class={i < powerStars ? 'animate-energy-pulse' : ''}
+                    />
                   ))
                 }
               </div>
             </div>
-            <div class="text-4xl animate-energy-pulse">⚡</div>
+            <div class="flex justify-center">
+              <Icon name="⚡" size="4xl" class="animate-energy-pulse" color="saiyan-yellow" />
+            </div>
           </div>
         </div>
       </div>
@@ -103,18 +107,19 @@ const powerStars = getPowerStars(transformation.ki);
             {transformation.name}
           </h1>
           <div class="bg-gray-800 p-6 rounded-lg border border-saiyan-yellow/20">
-            <h3 class="text-saiyan-yellow font-semibold mb-3 text-xl flex items-center">
-              ⚡ Power Level
+            <h3 class="text-saiyan-yellow font-semibold mb-3 text-xl flex items-center gap-2">
+              <Icon name="⚡" size="lg" color="saiyan-yellow" />
+              Power Level
             </h3>
             <p class="text-3xl font-dragon text-white mb-2">{transformation.ki}</p>
             <div class="flex space-x-1 lg:hidden">
               {
                 Array.from({ length: 5 }).map((_, i) => (
-                  <span
-                    class={`text-xl ${i < powerStars ? 'text-saiyan-yellow' : 'text-gray-600'}`}
-                  >
-                    ⭐
-                  </span>
+                  <Icon
+                    name="⭐"
+                    size="xl"
+                    color={i < powerStars ? 'saiyan-yellow' : 'gray'}
+                  />
                 ))
               }
             </div>
@@ -181,7 +186,9 @@ const powerStars = getPowerStars(transformation.ki);
           <h3 class="text-dragon-red font-semibold mb-3 text-xl">Combat Analysis</h3>
           <div class="grid grid-cols-2 gap-4">
             <div class="text-center">
-              <div class="text-2xl mb-1">🔥</div>
+              <div class="flex justify-center mb-1">
+                <Icon name="🔥" size="2xl" color="dragon-red" />
+              </div>
               <div class="text-sm text-gray-400">Offensive</div>
               <div class="text-lg font-bold text-white">
                 {
@@ -196,7 +203,9 @@ const powerStars = getPowerStars(transformation.ki);
               </div>
             </div>
             <div class="text-center">
-              <div class="text-2xl mb-1">🛡️</div>
+              <div class="flex justify-center mb-1">
+                <Icon name="🛡️" size="2xl" color="dragon-blue" />
+              </div>
               <div class="text-sm text-gray-400">Defensive</div>
               <div class="text-lg font-bold text-white">
                 {
@@ -218,19 +227,25 @@ const powerStars = getPowerStars(transformation.ki);
     <!-- Transformation Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-saiyan-yellow/20">
-        <div class="text-3xl mb-2">⚡</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="⚡" size="3xl" color="saiyan-yellow" />
+        </div>
         <div class="text-saiyan-yellow font-semibold">Energy Output</div>
         <div class="text-white">{transformation.ki}</div>
       </div>
 
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
-        <div class="text-3xl mb-2">⭐</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="⭐" size="3xl" color="dragon-gold" />
+        </div>
         <div class="text-dragon-gold font-semibold">Power Rating</div>
         <div class="text-white">{powerStars}/5 Stars</div>
       </div>
 
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-red/20">
-        <div class="text-3xl mb-2">🎯</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="🎯" size="3xl" color="dragon-red" />
+        </div>
         <div class="text-dragon-red font-semibold">Difficulty</div>
         <div class="text-white">
           {
@@ -248,7 +263,9 @@ const powerStars = getPowerStars(transformation.ki);
       </div>
 
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-namek-green/20">
-        <div class="text-3xl mb-2">🌟</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="🌟" size="3xl" color="namek-green" />
+        </div>
         <div class="text-namek-green font-semibold">Status</div>
         <div class="text-white">
           {transformation.deletedAt ? 'Lost' : 'Active'}
@@ -278,7 +295,10 @@ const powerStars = getPowerStars(transformation.ki);
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 class="text-xl font-semibold text-dragon-gold mb-3">🎯 Requirements</h3>
+            <h3 class="text-xl font-semibold text-dragon-gold mb-3 flex items-center gap-2">
+              <Icon name="🎯" size="lg" color="dragon-gold" />
+              Requirements
+            </h3>
             <ul class="text-gray-300 space-y-2">
               <li>
                 • {
@@ -294,7 +314,10 @@ const powerStars = getPowerStars(transformation.ki);
             </ul>
           </div>
           <div>
-            <h3 class="text-xl font-semibold text-dragon-gold mb-3">⚡ Effects</h3>
+            <h3 class="text-xl font-semibold text-dragon-gold mb-3 flex items-center gap-2">
+              <Icon name="⚡" size="lg" color="dragon-gold" />
+              Effects
+            </h3>
             <ul class="text-gray-300 space-y-2">
               <li>• Dramatic increase in strength and speed</li>
               <li>• Enhanced ki output and energy projection</li>

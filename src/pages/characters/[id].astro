@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import TransformationCard from '../../components/TransformationCard.astro';
+import Icon from '../../components/Icon.astro';
 import { dragonBallApi } from '../../utils/api';
 
 export async function getStaticPaths() {
@@ -126,25 +127,33 @@ if (!character) {
     <!-- Character Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
-        <div class="text-3xl mb-2">🥊</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="🥊" size="3xl" color="dragon-gold" />
+        </div>
         <div class="text-dragon-gold font-semibold">Race</div>
         <div class="text-white">{character.race}</div>
       </div>
 
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
-        <div class="text-3xl mb-2">⚧️</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="⚧️" size="3xl" color="dragon-gold" />
+        </div>
         <div class="text-dragon-gold font-semibold">Gender</div>
         <div class="text-white">{character.gender || 'Unknown'}</div>
       </div>
 
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
-        <div class="text-3xl mb-2">🏆</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="🏆" size="3xl" color="dragon-gold" />
+        </div>
         <div class="text-dragon-gold font-semibold">Affiliation</div>
         <div class="text-white">{character.affiliation || 'None'}</div>
       </div>
 
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
-        <div class="text-3xl mb-2">⚡</div>
+        <div class="flex justify-center mb-2">
+          <Icon name="⚡" size="3xl" color="dragon-gold" />
+        </div>
         <div class="text-dragon-gold font-semibold">Transformations</div>
         <div class="text-white">{character.transformations?.length || 0}</div>
       </div>

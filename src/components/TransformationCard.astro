@@ -1,5 +1,6 @@
 ---
 import type { Transformation } from '../types/api';
+import Icon from './Icon.astro';
 
 export interface Props {
   transformation: Transformation;
@@ -41,7 +42,7 @@ const { transformation } = Astro.props;
       <div class="flex space-x-1">
         {
           Array.from({ length: 3 }).map((_, i) => (
-            <span class="text-lg text-saiyan-yellow animate-energy-pulse">⚡</span>
+            <Icon name="⚡" size="lg" color="saiyan-yellow" class="animate-energy-pulse" />
           ))
         }
       </div>

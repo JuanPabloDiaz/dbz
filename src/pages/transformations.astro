@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import TransformationCard from '../components/TransformationCard.astro';
 import Pagination from '../components/Pagination.astro';
+import Icon from '../components/Icon.astro';
 import { dragonBallApi } from '../utils/api';
 import type { Transformation, ApiResponse } from '../types/api';
 
@@ -63,9 +64,10 @@ try {
 
         <button
           type="submit"
-          class="bg-saiyan-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+          class="bg-saiyan-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center gap-2"
         >
-          ⚡ Search
+          <Icon name="⚡" size="md" />
+          Search
         </button>
       </form>
     </div>
@@ -91,7 +93,9 @@ try {
         </div>
       ) : (
         <div class="text-center py-16">
-          <div class="text-6xl mb-4">⚡</div>
+          <div class="flex justify-center mb-4">
+            <Icon name="⚡" size="6xl" color="saiyan-yellow" />
+          </div>
           <h3 class="text-2xl font-manga text-saiyan-yellow mb-2">No Transformations Found</h3>
           <p class="text-gray-300 mb-6">Try adjusting your search terms</p>
           <a
@@ -121,25 +125,33 @@ try {
       <h2 class="text-3xl font-manga text-saiyan-yellow mb-8 text-center">Types of Power</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="text-center p-6 bg-gray-700 rounded-lg">
-          <div class="text-4xl mb-3">🦍</div>
+          <div class="flex justify-center mb-3">
+            <Icon name="🦍" size="4xl" color="saiyan-yellow" />
+          </div>
           <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">Great Ape</h3>
           <p class="text-gray-300 text-sm">Primal Saiyan transformation triggered by moonlight</p>
         </div>
 
         <div class="text-center p-6 bg-gray-700 rounded-lg">
-          <div class="text-4xl mb-3">⚡</div>
+          <div class="flex justify-center mb-3">
+            <Icon name="⚡" size="4xl" color="saiyan-yellow" />
+          </div>
           <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">Super Saiyan</h3>
           <p class="text-gray-300 text-sm">Legendary form born from intense emotion and training</p>
         </div>
 
         <div class="text-center p-6 bg-gray-700 rounded-lg">
-          <div class="text-4xl mb-3">👑</div>
+          <div class="flex justify-center mb-3">
+            <Icon name="👑" size="4xl" color="saiyan-yellow" />
+          </div>
           <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">God Forms</h3>
           <p class="text-gray-300 text-sm">Divine transformations beyond mortal limits</p>
         </div>
 
         <div class="text-center p-6 bg-gray-700 rounded-lg">
-          <div class="text-4xl mb-3">🎭</div>
+          <div class="flex justify-center mb-3">
+            <Icon name="🎭" size="4xl" color="saiyan-yellow" />
+          </div>
           <h3 class="text-lg font-semibold text-saiyan-yellow mb-2">Fusion</h3>
           <p class="text-gray-300 text-sm">Combination of multiple warriors into one being</p>
         </div>
@@ -152,19 +164,31 @@ try {
       <div class="bg-gray-800 p-8 rounded-lg border border-dragon-gold/20">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="text-center">
-            <div class="text-3xl mb-2 text-green-400">⭐</div>
+            <div class="flex justify-center mb-2">
+              <Icon name="⭐" size="3xl" color="white" />
+            </div>
             <h3 class="text-lg font-semibold text-white mb-2">Base Forms</h3>
             <p class="text-gray-300 text-sm">Natural state of warriors</p>
           </div>
 
           <div class="text-center">
-            <div class="text-3xl mb-2 text-yellow-400">⭐⭐⭐</div>
+            <div class="flex justify-center mb-2 gap-1">
+              <Icon name="⭐" size="3xl" color="white" />
+              <Icon name="⭐" size="3xl" color="white" />
+              <Icon name="⭐" size="3xl" color="white" />
+            </div>
             <h3 class="text-lg font-semibold text-white mb-2">Advanced Forms</h3>
             <p class="text-gray-300 text-sm">Transformations requiring training</p>
           </div>
 
           <div class="text-center">
-            <div class="text-3xl mb-2 text-red-400">⭐⭐⭐⭐⭐</div>
+            <div class="flex justify-center mb-2 gap-1">
+              <Icon name="⭐" size="3xl" color="white" />
+              <Icon name="⭐" size="3xl" color="white" />
+              <Icon name="⭐" size="3xl" color="white" />
+              <Icon name="⭐" size="3xl" color="white" />
+              <Icon name="⭐" size="3xl" color="white" />
+            </div>
             <h3 class="text-lg font-semibold text-white mb-2">Ultimate Forms</h3>
             <p class="text-gray-300 text-sm">Legendary and divine transformations</p>
           </div>

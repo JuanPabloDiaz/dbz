@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import CharacterCard from '../components/CharacterCard.astro';
 import Pagination from '../components/Pagination.astro';
+import Icon from '../components/Icon.astro';
 import { dragonBallApi } from '../utils/api';
 import type { Character } from '../types/api';
 
@@ -161,7 +162,9 @@ const affiliations = [
         </div>
       ) : (
         <div class="text-center py-16">
-          <div class="text-6xl mb-4">🔍</div>
+          <div class="flex justify-center mb-4">
+            <Icon name="🔍" size="6xl" color="dragon-gold" />
+          </div>
           <h3 class="text-2xl font-manga text-dragon-gold mb-2">No Characters Found</h3>
           <p class="text-gray-300 mb-6">Try adjusting your filters or search terms</p>
           <a

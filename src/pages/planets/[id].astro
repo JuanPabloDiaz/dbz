@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import CharacterCard from '../../components/CharacterCard.astro';
+import Icon from '../../components/Icon.astro';
 import { dragonBallApi } from '../../utils/api';
 
 export async function getStaticPaths() {
@@ -62,11 +63,21 @@ if (!planet) {
           class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-namek-green/20"
         />
         <div
-          class={`absolute top-4 right-4 px-3 py-1 rounded-full text-white font-bold ${
+          class={`absolute top-4 right-4 px-3 py-1 rounded-full text-white font-bold flex items-center gap-2 ${
             planet.isDestroyed ? 'bg-dragon-red' : 'bg-namek-green'
           }`}
         >
-          {planet.isDestroyed ? '💥 Destroyed' : '🌍 Active'}
+          {planet.isDestroyed ? (
+            <>
+              <Icon name="💥" size="sm" color="white" />
+              Destroyed
+            </>
+          ) : (
+            <>
+              <Icon name="🌍" size="sm" color="white" />
+              Active
+            </>
+          )}
         </div>
       </div>
 
@@ -110,7 +121,13 @@ if (!planet) {
     <!-- Planet Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-namek-green/20">
-        <div class="text-4xl mb-3">{planet.isDestroyed ? '💥' : '🌍'}</div>
+        <div class="flex justify-center mb-3">
+          {planet.isDestroyed ? (
+            <Icon name="💥" size="4xl" color="dragon-red" />
+          ) : (
+            <Icon name="🌍" size="4xl" color="namek-green" />
+          )}
+        </div>
         <div class="text-namek-green font-semibold text-lg">Status</div>
         <div class="text-white text-xl">
           {planet.isDestroyed ? 'Destroyed' : 'Active'}
@@ -175,7 +192,10 @@ if (!planet) {
           </p>
         </div>
         <div>
-          <h3 class="text-xl font-semibold text-dragon-gold mb-3">⚡ Significance</h3>
+          <h3 class="text-xl font-semibold text-dragon-gold mb-3 flex items-center gap-2">
+            <Icon name="⚡" size="lg" color="dragon-gold" />
+            Significance
+          </h3>
           <p class="text-gray-300">
             {
               planet.name.includes('Earth')
