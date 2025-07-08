@@ -1,10 +1,12 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import CharacterCard from '@components/CharacterCard.astro';
-import Pagination from '@components/Pagination.astro';
-import Icon from '@components/Icon.astro';
-import { dragonBallApi } from '@utils/api';
+import Layout from '../layouts/Layout.astro';
+import CharacterCard from '../components/CharacterCard.astro';
+import Pagination from '../components/Pagination.astro';
+import Icon from '../components/Icon.astro';
+import { dragonBallApi } from '../utils/api';
 import type { Character } from '../types/api';
+
+export const prerender = false;
 
 // Get query parameters
 const url = new URL(Astro.request.url);
@@ -32,11 +34,23 @@ let meta = {
   totalPages: 0,
   currentPage: page,
 };
+let links: {
+  first: string;
+  last: string;
+  previous?: string;
+  next?: string;
+} = {
+  first: '',
+  last: '',
+  previous: undefined,
+  next: undefined,
+};
 
 try {
   const response = await dragonBallApi.getAllCharacters(params);
   characters = response?.items || [];
   meta = response?.meta || meta;
+  links = response?.links || links;
 } catch (error) {
   console.error('Error fetching characters:', error);
   // Keep default values
@@ -185,6 +199,7 @@ const affiliations = [
           totalPages={meta.totalPages}
           baseUrl="/characters"
           searchParams={url.searchParams}
+          links={links}
         />
       )
     }
