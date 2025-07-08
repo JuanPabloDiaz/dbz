@@ -4,10 +4,8 @@ export interface Props {
   description?: string;
 }
 
-const {
-  title,
-  description = 'Dragon Ball Universe - Explore characters, planets, and transformations',
-} = Astro.props;
+const { title, description = 'Dragon Ball - Explore characters, planets, and transformations' } =
+  Astro.props;
 ---
 
 <!doctype html>
@@ -33,7 +31,7 @@ const {
             href="/"
             class="text-2xl font-dragon font-bold text-white hover:text-yellow-200 transition-colors"
           >
-            🐉 Dragon Ball Universe
+            <img src="/logo.svg" alt="Dragon Ball Logo" class="h-10 inline-block mr-2" />
           </a>
           <div class="hidden md:flex space-x-6">
             <a href="/" class="hover:text-yellow-200 transition-colors font-semibold">Home</a>

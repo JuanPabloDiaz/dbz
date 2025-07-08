@@ -1,6 +1,6 @@
 # 🐉 Dragon Ball
 
-A modern, responsive web application built with Astro that explores the Dragon Ball universe using the Dragon Ball API. Discover legendary warriors, mystical planets, and epic transformations with a beautifully designed interface that captures the spirit of the series.
+A modern, responsive web application built with Astro that explores the Dragon Ball using the Dragon Ball API. Discover legendary warriors, mystical planets, and epic transformations with a beautifully designed interface that captures the spirit of the series.
 
 ## ✨ Features
 
@@ -161,7 +161,7 @@ This project is for educational purposes. Dragon Ball is owned by Akira Toriyama
 ## 🙏 Acknowledgments
 
 - [Dragon Ball API](https://dragonball-api.com/) for providing the data
-- Akira Toriyama for creating the Dragon Ball universe
+- Akira Toriyama for creating the Dragon Ball
 - The Astro team for the amazing framework
 - The open-source community for the tools used
 

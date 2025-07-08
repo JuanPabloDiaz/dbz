@@ -65,28 +65,33 @@ class DragonBallApi {
 
     // The transformations API returns a direct array, not an ApiResponse structure
     const transformationsArray = await this.fetchData<Transformation[]>(endpoint);
-    
+
     // Apply client-side filtering and pagination since the API doesn't support it
     let filteredTransformations = transformationsArray;
-    
+
     // Apply name filter if provided
     if (params?.name) {
-      filteredTransformations = transformationsArray.filter(transformation =>
+      filteredTransformations = transformationsArray.filter((transformation) =>
         transformation.name.toLowerCase().includes(params.name!.toLowerCase())
       );
     }
-    
+
     // Apply pagination
     const page = params?.page || 1;
     const limit = params?.limit || 12;
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
-    const paginatedTransformations = filteredTransformations.slice(startIndex, endIndex);
-    
-    // Create ApiResponse structure for compatibility
+    const paginatedTransformations = filteredTransformations.slice(startIndex, endIndex); // Create ApiResponse structure for compatibility
     const totalItems = filteredTransformations.length;
     const totalPages = Math.ceil(totalItems / limit);
-    
+
+    // Build query string for links
+    const linkParams = new URLSearchParams();
+    if (params?.limit) linkParams.append('limit', params.limit.toString());
+    if (params?.name) linkParams.append('name', params.name);
+    const linkQuery = linkParams.toString();
+    const linkQueryString = linkQuery ? `&${linkQuery}` : '';
+
     return {
       items: paginatedTransformations,
       meta: {
@@ -97,10 +102,10 @@ class DragonBallApi {
         currentPage: page,
       },
       links: {
-        first: `/transformations?page=1&limit=${limit}`,
-        last: `/transformations?page=${totalPages}&limit=${limit}`,
-        ...(page > 1 && { previous: `/transformations?page=${page - 1}&limit=${limit}` }),
-        ...(page < totalPages && { next: `/transformations?page=${page + 1}&limit=${limit}` }),
+        first: `/transformations?page=1${linkQueryString}`,
+        last: `/transformations?page=${totalPages}${linkQueryString}`,
+        ...(page > 1 && { previous: `/transformations?page=${page - 1}${linkQueryString}` }),
+        ...(page < totalPages && { next: `/transformations?page=${page + 1}${linkQueryString}` }),
       },
     };
   }

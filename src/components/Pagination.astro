@@ -3,9 +3,16 @@ export interface Props {
   currentPage: number;
   totalPages: number;
   baseUrl: string;
+  searchParams?: URLSearchParams;
 }
 
-const { currentPage, totalPages, baseUrl } = Astro.props;
+const { currentPage, totalPages, baseUrl, searchParams } = Astro.props;
+
+const buildUrl = (page: number): string => {
+  const params = new URLSearchParams(searchParams || {});
+  params.set('page', page.toString());
+  return `${baseUrl}?${params.toString()}`;
+};
 
 const generatePageNumbers = (): number[] => {
   const pages: number[] = [];
@@ -33,7 +40,7 @@ const pageNumbers = generatePageNumbers();
     <nav class="flex justify-center items-center space-x-2 mt-8">
       {currentPage > 1 && (
         <a
-          href={`${baseUrl}?page=${currentPage - 1}`}
+          href={buildUrl(currentPage - 1)}
           class="px-3 py-2 bg-dragon-blue text-white rounded-lg hover:bg-dragon-orange transition-colors"
         >
           Previous
@@ -43,7 +50,7 @@ const pageNumbers = generatePageNumbers();
       {pageNumbers[0] > 1 && (
         <>
           <a
-            href={`${baseUrl}?page=1`}
+            href={buildUrl(1)}
             class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors"
           >
             1
@@ -54,7 +61,7 @@ const pageNumbers = generatePageNumbers();
 
       {pageNumbers.map((page) => (
         <a
-          href={`${baseUrl}?page=${page}`}
+          href={buildUrl(page)}
           class={`px-3 py-2 rounded-lg transition-colors ${
             page === currentPage
               ? 'bg-dragon-gold text-gray-900 font-bold'
@@ -71,7 +78,7 @@ const pageNumbers = generatePageNumbers();
             <span class="text-gray-400">...</span>
           )}
           <a
-            href={`${baseUrl}?page=${totalPages}`}
+            href={buildUrl(totalPages)}
             class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors"
           >
             {totalPages}
@@ -81,7 +88,7 @@ const pageNumbers = generatePageNumbers();
 
       {currentPage < totalPages && (
         <a
-          href={`${baseUrl}?page=${currentPage + 1}`}
+          href={buildUrl(currentPage + 1)}
           class="px-3 py-2 bg-dragon-blue text-white rounded-lg hover:bg-dragon-orange transition-colors"
         >
           Next
