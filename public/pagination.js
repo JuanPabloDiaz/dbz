@@ -140,67 +140,117 @@ window.DragonBallPagination = {
   // Create character card HTML
   createCharacterCard: function (character) {
     return `
-      <a href="/characters/${character.id}" class="group">
-        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-saiyan-yellow transition-all duration-300 transform hover:scale-105">
-          <div class="aspect-w-3 aspect-h-4 bg-gray-700">
-            <img src="${character.image}" alt="${character.name}" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-dragon-gold/20">
+        <div class="relative">
+          <img src="${character.image}" alt="${character.name}" class="w-full h-64 object-contain bg-gray-900" loading="lazy" />
+          <div class="absolute top-2 right-2 bg-dragon-orange px-2 py-1 rounded-full text-xs font-bold text-gray-900">
+            ${character.race || 'Unknown'}
           </div>
-          <div class="p-4">
-            <h3 class="text-xl font-manga text-saiyan-yellow mb-2 group-hover:text-dragon-orange transition-colors">${character.name}</h3>
-            <div class="flex flex-wrap gap-2 mb-3">
-              ${character.race ? `<span class="px-2 py-1 bg-namek-green text-white text-xs rounded-full">${character.race}</span>` : ''}
-              ${character.gender ? `<span class="px-2 py-1 bg-dragon-blue text-white text-xs rounded-full">${character.gender}</span>` : ''}
+          ${character.gender ? `<div class="absolute top-2 left-2 bg-dragon-blue px-2 py-1 rounded-full text-xs font-bold">
+            ${character.gender}
+          </div>` : ''}
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-manga text-dragon-gold mb-2">${character.name}</h3>
+          <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+            <div class="bg-gray-700 p-2 rounded">
+              <span class="text-dragon-orange-light font-semibold">Ki:</span>
+              <span class="text-white ml-1">${character.ki || 'Unknown'}</span>
             </div>
-            <p class="text-gray-300 text-sm mb-3 line-clamp-3">${character.description || 'A powerful warrior from the Dragon Ball universe.'}</p>
-            <div class="flex items-center justify-between">
-              <span class="text-dragon-gold text-sm">Power Level: ${character.ki || 'Unknown'}</span>
-              <span class="text-xs text-gray-400">View Details →</span>
+            <div class="bg-gray-700 p-2 rounded">
+              <span class="text-dragon-orange-light font-semibold">Max Ki:</span>
+              <span class="text-white ml-1">${character.maxKi || 'Unknown'}</span>
+            </div>
+          </div>
+          ${character.affiliation ? `<div class="mb-3">
+            <span class="inline-block bg-dragon-blue px-2 py-1 rounded-full text-xs font-semibold">
+              ${character.affiliation}
+            </span>
+          </div>` : ''}
+          ${character.originPlanet ? `<div class="mb-3">
+            <span class="text-namek-green font-semibold text-sm">Origin:</span>
+            <span class="text-white ml-1 text-sm">${character.originPlanet.name}</span>
+          </div>` : ''}
+          ${character.transformations && character.transformations.length > 0 ? `<div class="mb-3">
+            <span class="text-saiyan-yellow font-semibold text-sm">Transformations:</span>
+            <span class="text-white ml-1 text-sm">${character.transformations.length}</span>
+          </div>` : ''}
+          <div class="flex justify-between items-center mt-4">
+            <a href="/characters/${character.id}" class="bg-dragon-gradient text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-sm">
+              View Details
+            </a>
+            <div class="flex space-x-1">
+              ${Array.from({ length: 5 }).map((_, i) => {
+                const kiValue = character.ki ? parseInt(character.ki.replace(/\D/g, '')) / 1000000000 : 0;
+                const filled = i < Math.min(kiValue, 5);
+                return `<span class="${filled ? 'text-yellow-400' : 'text-gray-400'} text-lg">⭐</span>`;
+              }).join('')}
             </div>
           </div>
         </div>
-      </a>
+      </div>
     `;
   },
 
   // Create planet card HTML
   createPlanetCard: function (planet) {
     return `
-      <a href="/planets/${planet.id}" class="group">
-        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-namek-green transition-all duration-300 transform hover:scale-105">
-          <div class="aspect-w-16 aspect-h-9 bg-gray-700">
-            <img src="${planet.image}" alt="${planet.name}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-namek-green/20">
+        <div class="relative">
+          <img src="${planet.image}" alt="${planet.name}" class="w-full h-64 object-cover" loading="lazy" />
+          <div class="absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold ${planet.isDestroyed ? 'bg-dragon-red' : 'bg-namek-green'}">
+            ${planet.isDestroyed ? 'Destroyed' : 'Active'}
           </div>
-          <div class="p-4">
-            <h3 class="text-xl font-manga text-namek-green mb-2 group-hover:text-dragon-orange transition-colors">${planet.name}</h3>
-            <p class="text-gray-300 text-sm mb-3 line-clamp-3">${planet.description || 'A mysterious world in the Dragon Ball universe.'}</p>
-            <div class="flex items-center justify-between">
-              <span class="text-namek-green text-sm">🌍 Planet</span>
-              <span class="text-xs text-gray-400">Explore →</span>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-manga text-namek-green-light mb-2">${planet.name}</h3>
+          ${planet.description ? `<p class="text-gray-300 text-sm mb-3 line-clamp-3">${planet.description}</p>` : ''}
+          ${planet.characters && planet.characters.length > 0 ? `<div class="mb-3">
+            <span class="text-dragon-gold font-semibold text-sm">Characters:</span>
+            <span class="text-white ml-1 text-sm">${planet.characters.length}</span>
+          </div>` : ''}
+          <div class="flex justify-between items-center mt-4">
+            <a href="/planets/${planet.id}" class="bg-gradient-to-r from-namek-green to-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-sm">
+              Explore Planet
+            </a>
+            <div class="flex items-center space-x-1">
+              <span class="text-lg">🌍</span>
+              <span class="text-sm text-gray-400">
+                ${planet.isDestroyed ? 'Lost' : 'Thriving'}
+              </span>
             </div>
           </div>
         </div>
-      </a>
+      </div>
     `;
   },
 
   // Create transformation card HTML
   createTransformationCard: function (transformation) {
     return `
-      <a href="/transformations/${transformation.id}" class="group">
-        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-saiyan-yellow transition-all duration-300 transform hover:scale-105">
-          <div class="aspect-w-3 aspect-h-4 bg-gray-700">
-            <img src="${transformation.image}" alt="${transformation.name}" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-saiyan-yellow/20">
+        <div class="relative">
+          <img src="${transformation.image}" alt="${transformation.name}" class="w-full h-64 object-contain bg-gray-900" loading="lazy" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          <div class="absolute bottom-2 left-2 right-2">
+            <h3 class="text-lg font-manga text-saiyan-yellow">${transformation.name}</h3>
           </div>
-          <div class="p-4">
-            <h3 class="text-xl font-manga text-saiyan-yellow mb-2 group-hover:text-dragon-orange transition-colors">${transformation.name}</h3>
-            <p class="text-gray-300 text-sm mb-3 line-clamp-3">${transformation.description || 'A powerful transformation from the Dragon Ball universe.'}</p>
-            <div class="flex items-center justify-between">
-              <span class="text-saiyan-yellow text-sm">⚡ Transformation</span>
-              <span class="text-xs text-gray-400">View Details →</span>
+        </div>
+        <div class="p-4">
+          <div class="bg-gray-700 p-2 rounded mb-3">
+            <span class="text-saiyan-yellow font-semibold">Ki Level:</span>
+            <span class="text-white ml-1">${transformation.ki}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <a href="/transformations/${transformation.id}" class="bg-saiyan-gradient text-gray-900 px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-sm">
+              View Form
+            </a>
+            <div class="flex space-x-1">
+              ${Array.from({ length: 3 }).map(() => `<span class="text-lg text-saiyan-yellow animate-energy-pulse">⚡</span>`).join('')}
             </div>
           </div>
         </div>
-      </a>
+      </div>
     `;
   },
 
