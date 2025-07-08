@@ -73,18 +73,26 @@ try {
     <!-- Results Info -->
     <div class="flex justify-between items-center mb-6">
       <p class="text-gray-300 results-info">
-        Showing <span class="text-saiyan-yellow font-semibold">{meta.itemCount}</span> of <span class="text-saiyan-yellow font-semibold">{meta.totalItems}</span> transformations
+        Showing <span class="text-saiyan-yellow font-semibold">{meta.itemCount}</span> of <span
+          class="text-saiyan-yellow font-semibold">{meta.totalItems}</span
+        > transformations
       </p>
       <p class="text-gray-300 page-info">
-        Page <span class="text-saiyan-yellow font-semibold">{meta.currentPage}</span> of <span class="text-saiyan-yellow font-semibold">{meta.totalPages}</span>
+        Page <span class="text-saiyan-yellow font-semibold">{meta.currentPage}</span> of <span
+          class="text-saiyan-yellow font-semibold">{meta.totalPages}</span
+        >
       </p>
     </div>
 
     <!-- Transformations Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 transformations-grid">
-      {transformations.map((transformation) => (
-        <TransformationCard transformation={transformation} />
-      ))}
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 transformations-grid"
+    >
+      {
+        transformations.map((transformation) => (
+          <TransformationCard transformation={transformation} />
+        ))
+      }
     </div>
 
     <!-- Pagination -->
@@ -105,7 +113,7 @@ try {
 
   <script src="/pagination.js" is:inline></script>
   <script is:inline>
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('DOMContentLoaded', function () {
       if (window.DragonBallPagination) {
         window.DragonBallPagination.initTransformations();
       }

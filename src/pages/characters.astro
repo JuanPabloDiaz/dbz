@@ -77,11 +77,7 @@ const affiliations = [
             class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Races</option>
-            {
-              races.map((raceOption) => (
-                <option value={raceOption}>{raceOption}</option>
-              ))
-            }
+            {races.map((raceOption) => <option value={raceOption}>{raceOption}</option>)}
           </select>
         </div>
 
@@ -92,11 +88,7 @@ const affiliations = [
             class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Genders</option>
-            {
-              genders.map((genderOption) => (
-                <option value={genderOption}>{genderOption}</option>
-              ))
-            }
+            {genders.map((genderOption) => <option value={genderOption}>{genderOption}</option>)}
           </select>
         </div>
 
@@ -129,18 +121,22 @@ const affiliations = [
     <!-- Results Info -->
     <div class="flex justify-between items-center mb-6">
       <p class="text-gray-300 results-info">
-        Showing <span class="text-dragon-gold font-semibold">{meta.itemCount}</span> of <span class="text-dragon-gold font-semibold">{meta.totalItems}</span> characters
+        Showing <span class="text-dragon-gold font-semibold">{meta.itemCount}</span> of <span
+          class="text-dragon-gold font-semibold">{meta.totalItems}</span
+        > characters
       </p>
       <p class="text-gray-300 page-info">
-        Page <span class="text-dragon-gold font-semibold">{meta.currentPage}</span> of <span class="text-dragon-gold font-semibold">{meta.totalPages}</span>
+        Page <span class="text-dragon-gold font-semibold">{meta.currentPage}</span> of <span
+          class="text-dragon-gold font-semibold">{meta.totalPages}</span
+        >
       </p>
     </div>
 
     <!-- Characters Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 characters-grid">
-      {characters.map((character) => (
-        <CharacterCard character={character} />
-      ))}
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 characters-grid"
+    >
+      {characters.map((character) => <CharacterCard character={character} />)}
     </div>
 
     <!-- Pagination -->
@@ -161,7 +157,7 @@ const affiliations = [
 
   <script src="/pagination.js" is:inline></script>
   <script is:inline>
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('DOMContentLoaded', function () {
       if (window.DragonBallPagination) {
         window.DragonBallPagination.initCharacters();
       }

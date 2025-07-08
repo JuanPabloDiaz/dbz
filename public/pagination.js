@@ -1,7 +1,7 @@
 // Simple pagination handler for static Dragon Ball site
 window.DragonBallPagination = {
   // Characters pagination
-  initCharacters: function() {
+  initCharacters: function () {
     const url = new URL(window.location.href);
     const page = parseInt(url.searchParams.get('page') || '1');
     const name = url.searchParams.get('name') || '';
@@ -13,7 +13,7 @@ window.DragonBallPagination = {
   },
 
   // Planets pagination
-  initPlanets: function() {
+  initPlanets: function () {
     const url = new URL(window.location.href);
     const page = parseInt(url.searchParams.get('page') || '1');
     const name = url.searchParams.get('name') || '';
@@ -25,7 +25,7 @@ window.DragonBallPagination = {
   },
 
   // Transformations pagination
-  initTransformations: function() {
+  initTransformations: function () {
     const url = new URL(window.location.href);
     const page = parseInt(url.searchParams.get('page') || '1');
     const name = url.searchParams.get('name') || '';
@@ -37,7 +37,7 @@ window.DragonBallPagination = {
   },
 
   // Load characters data
-  loadCharacters: async function(page, name) {
+  loadCharacters: async function (page, name) {
     try {
       this.showLoading('characters');
       const apiUrl = new URL('https://dragonball-api.com/api/characters');
@@ -55,7 +55,7 @@ window.DragonBallPagination = {
   },
 
   // Load planets data
-  loadPlanets: async function(page, name) {
+  loadPlanets: async function (page, name) {
     try {
       this.showLoading('planets');
       const apiUrl = new URL('https://dragonball-api.com/api/planets');
@@ -73,7 +73,7 @@ window.DragonBallPagination = {
   },
 
   // Load transformations data
-  loadTransformations: async function(page, name) {
+  loadTransformations: async function (page, name) {
     try {
       this.showLoading('transformations');
       const apiUrl = new URL('https://dragonball-api.com/api/transformations');
@@ -91,49 +91,54 @@ window.DragonBallPagination = {
   },
 
   // Update characters content
-  updateCharacters: function(data, page) {
+  updateCharacters: function (data, page) {
     const grid = document.querySelector('.characters-grid');
     const resultsInfo = document.querySelector('.results-info');
     const pageInfo = document.querySelector('.page-info');
 
-    if (resultsInfo) resultsInfo.textContent = `Showing ${data.meta.itemCount} of ${data.meta.totalItems} characters`;
+    if (resultsInfo)
+      resultsInfo.textContent = `Showing ${data.meta.itemCount} of ${data.meta.totalItems} characters`;
     if (pageInfo) pageInfo.textContent = `Page ${page} of ${data.meta.totalPages}`;
-    
+
     if (grid && data.items && data.items.length > 0) {
-      grid.innerHTML = data.items.map(char => this.createCharacterCard(char)).join('');
+      grid.innerHTML = data.items.map((char) => this.createCharacterCard(char)).join('');
     }
   },
 
   // Update planets content
-  updatePlanets: function(data, page) {
+  updatePlanets: function (data, page) {
     const grid = document.querySelector('.planets-grid');
     const resultsInfo = document.querySelector('.results-info');
     const pageInfo = document.querySelector('.page-info');
 
-    if (resultsInfo) resultsInfo.textContent = `Showing ${data.meta.itemCount} of ${data.meta.totalItems} planets`;
+    if (resultsInfo)
+      resultsInfo.textContent = `Showing ${data.meta.itemCount} of ${data.meta.totalItems} planets`;
     if (pageInfo) pageInfo.textContent = `Page ${page} of ${data.meta.totalPages}`;
-    
+
     if (grid && data.items && data.items.length > 0) {
-      grid.innerHTML = data.items.map(planet => this.createPlanetCard(planet)).join('');
+      grid.innerHTML = data.items.map((planet) => this.createPlanetCard(planet)).join('');
     }
   },
 
   // Update transformations content
-  updateTransformations: function(data, page) {
+  updateTransformations: function (data, page) {
     const grid = document.querySelector('.transformations-grid');
     const resultsInfo = document.querySelector('.results-info');
     const pageInfo = document.querySelector('.page-info');
 
-    if (resultsInfo) resultsInfo.textContent = `Showing ${data.meta.itemCount} of ${data.meta.totalItems} transformations`;
+    if (resultsInfo)
+      resultsInfo.textContent = `Showing ${data.meta.itemCount} of ${data.meta.totalItems} transformations`;
     if (pageInfo) pageInfo.textContent = `Page ${page} of ${data.meta.totalPages}`;
-    
+
     if (grid && data.items && data.items.length > 0) {
-      grid.innerHTML = data.items.map(transformation => this.createTransformationCard(transformation)).join('');
+      grid.innerHTML = data.items
+        .map((transformation) => this.createTransformationCard(transformation))
+        .join('');
     }
   },
 
   // Create character card HTML
-  createCharacterCard: function(character) {
+  createCharacterCard: function (character) {
     return `
       <a href="/characters/${character.id}" class="group">
         <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-saiyan-yellow transition-all duration-300 transform hover:scale-105">
@@ -158,7 +163,7 @@ window.DragonBallPagination = {
   },
 
   // Create planet card HTML
-  createPlanetCard: function(planet) {
+  createPlanetCard: function (planet) {
     return `
       <a href="/planets/${planet.id}" class="group">
         <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-namek-green transition-all duration-300 transform hover:scale-105">
@@ -179,7 +184,7 @@ window.DragonBallPagination = {
   },
 
   // Create transformation card HTML
-  createTransformationCard: function(transformation) {
+  createTransformationCard: function (transformation) {
     return `
       <a href="/transformations/${transformation.id}" class="group">
         <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-saiyan-yellow transition-all duration-300 transform hover:scale-105">
@@ -200,7 +205,7 @@ window.DragonBallPagination = {
   },
 
   // Setup event handlers
-  setupHandlers: function(type) {
+  setupHandlers: function (type) {
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a[href*="page="]');
       if (!link) return;
@@ -221,9 +226,9 @@ window.DragonBallPagination = {
   },
 
   // Update URL without reload
-  updateUrl: function(page, filters) {
+  updateUrl: function (page, filters) {
     const url = new URL(window.location.href);
-    
+
     if (page > 1) {
       url.searchParams.set('page', page.toString());
     } else {
@@ -242,7 +247,7 @@ window.DragonBallPagination = {
   },
 
   // Show loading state
-  showLoading: function(type) {
+  showLoading: function (type) {
     const grid = document.querySelector(`.${type}-grid`);
     if (grid) {
       grid.innerHTML = `<div class="col-span-full text-center py-16"><div class="animate-spin text-6xl">${type === 'characters' ? '⚡' : type === 'planets' ? '🌍' : '⚡'}</div><p class="text-gray-300 mt-4">Loading ${type}...</p></div>`;
@@ -250,10 +255,10 @@ window.DragonBallPagination = {
   },
 
   // Show error state
-  showError: function(type) {
+  showError: function (type) {
     const grid = document.querySelector(`.${type}-grid`);
     if (grid) {
       grid.innerHTML = `<div class="col-span-full text-center py-16"><div class="text-6xl mb-4">😵</div><h3 class="text-2xl font-manga text-red-400 mb-2">Error Loading ${type}</h3><p class="text-gray-300">Please try again later</p></div>`;
     }
-  }
+  },
 };
