@@ -16,7 +16,7 @@ const {
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -80,16 +80,24 @@ const {
     <footer class="bg-gray-900 text-white py-8 mt-16">
       <div class="container mx-auto px-4 text-center">
         <p class="text-lg font-dragon">
-          Made with ⚡ by a Dragon Ball fan using the
+          Developed by{' '}
           <a
-            href="https://dragonball-api.com"
+            href="https://jpdiaz.dev"
+            target="_blank"
+            class="text-dragon-gold hover:text-dragon-orange transition-colors transition-all font-semibold"
+          >
+            Juan Diaz
+          </a>
+        </p>
+        <p class="text-sm text-gray-400 mt-2">
+          Built with Astro, TypeScript, Tailwind CSS, and the <a
+            href="https://web.dragonball-api.com"
             target="_blank"
             class="text-dragon-gold hover:text-dragon-orange transition-colors"
           >
             Dragon Ball API
           </a>
         </p>
-        <p class="text-sm text-gray-400 mt-2">Built with Astro, TypeScript, and Tailwind CSS</p>
       </div>
     </footer>
 

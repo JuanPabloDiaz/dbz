@@ -63,7 +63,46 @@ class DragonBallApi {
     const queryString = searchParams.toString();
     const endpoint = `/transformations${queryString ? `?${queryString}` : ''}`;
 
-    return this.fetchData<ApiResponse<Transformation>>(endpoint);
+    // The transformations API returns a direct array, not an ApiResponse structure
+    const transformationsArray = await this.fetchData<Transformation[]>(endpoint);
+    
+    // Apply client-side filtering and pagination since the API doesn't support it
+    let filteredTransformations = transformationsArray;
+    
+    // Apply name filter if provided
+    if (params?.name) {
+      filteredTransformations = transformationsArray.filter(transformation =>
+        transformation.name.toLowerCase().includes(params.name!.toLowerCase())
+      );
+    }
+    
+    // Apply pagination
+    const page = params?.page || 1;
+    const limit = params?.limit || 12;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedTransformations = filteredTransformations.slice(startIndex, endIndex);
+    
+    // Create ApiResponse structure for compatibility
+    const totalItems = filteredTransformations.length;
+    const totalPages = Math.ceil(totalItems / limit);
+    
+    return {
+      items: paginatedTransformations,
+      meta: {
+        totalItems,
+        itemCount: paginatedTransformations.length,
+        itemsPerPage: limit,
+        totalPages,
+        currentPage: page,
+      },
+      links: {
+        first: `/transformations?page=1&limit=${limit}`,
+        last: `/transformations?page=${totalPages}&limit=${limit}`,
+        ...(page > 1 && { previous: `/transformations?page=${page - 1}&limit=${limit}` }),
+        ...(page < totalPages && { next: `/transformations?page=${page + 1}&limit=${limit}` }),
+      },
+    };
   }
 
   async getTransformationById(id: number): Promise<Transformation> {
