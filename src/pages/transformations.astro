@@ -26,11 +26,23 @@ let meta = {
   totalPages: 0,
   currentPage: page,
 };
+let links: {
+  first: string;
+  last: string;
+  previous?: string;
+  next?: string;
+} = {
+  first: '',
+  last: '',
+  previous: undefined,
+  next: undefined,
+};
 
 try {
   const response = await dragonBallApi.getAllTransformations(params);
   transformations = response?.items || [];
   meta = response?.meta || meta;
+  links = response?.links || links;
 } catch (error) {
   console.error('Error fetching transformations:', error);
   // Keep default values
@@ -116,6 +128,7 @@ try {
           totalPages={meta.totalPages}
           baseUrl="/transformations"
           searchParams={url.searchParams}
+          links={links}
         />
       )
     }
