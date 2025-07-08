@@ -1,8 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import TransformationCard from '../../components/TransformationCard.astro';
+import CharacterCard from '../../components/CharacterCard.astro';
 import Icon from '../../components/Icon.astro';
 import { dragonBallApi } from '../../utils/api';
+import type { Character } from '../../types/api';
 
 export async function getStaticPaths() {
   try {
@@ -29,9 +31,24 @@ if (!id) {
   throw new Error('Character ID is required');
 }
 
-let character;
+let character: Character;
+let relatedCharacters: Character[] = [];
+
 try {
   character = await dragonBallApi.getCharacterById(parseInt(id));
+
+  // Fetch related characters from the same race or affiliation
+  const allCharactersResponse = await dragonBallApi.getAllCharacters({ limit: 50 });
+  const allCharacters = allCharactersResponse?.items || [];
+
+  // Filter characters that are related (same race or affiliation) but not the current character
+  relatedCharacters = allCharacters
+    .filter(
+      (c) =>
+        c.id !== character.id &&
+        (c.race === character.race || c.affiliation === character.affiliation)
+    )
+    .slice(0, 8); // Limit to 8 related characters
 } catch (error) {
   console.error(`Error fetching character ${id}:`, error);
   throw new Error(`Character with ID ${id} not found`);
@@ -128,7 +145,9 @@ if (!character) {
 
     <!-- Character Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
+      <div
+        class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30"
+      >
         <div class="flex justify-center mb-2">
           <Icon name="🥊" size="3xl" color="dragon-gold" />
         </div>
@@ -136,7 +155,9 @@ if (!character) {
         <div class="text-white">{character.race}</div>
       </div>
 
-      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
+      <div
+        class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30"
+      >
         <div class="flex justify-center mb-2">
           <Icon name="⚧️" size="3xl" color="dragon-gold" />
         </div>
@@ -144,7 +165,9 @@ if (!character) {
         <div class="text-white">{character.gender || 'Unknown'}</div>
       </div>
 
-      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
+      <div
+        class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30"
+      >
         <div class="flex justify-center mb-2">
           <Icon name="🏆" size="3xl" color="dragon-gold" />
         </div>
@@ -152,7 +175,9 @@ if (!character) {
         <div class="text-white">{character.affiliation || 'None'}</div>
       </div>
 
-      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
+      <div
+        class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30"
+      >
         <div class="flex justify-center mb-2">
           <Icon name="⚡" size="3xl" color="dragon-gold" />
         </div>
@@ -178,6 +203,20 @@ if (!character) {
     }
 
     <!-- Related Characters -->
+    {
+      relatedCharacters.length > 0 && (
+        <section class="mb-12">
+          <h2 class="text-3xl font-manga text-dragon-gold mb-6 text-center">Related Warriors</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {relatedCharacters.map((relatedCharacter) => (
+              <CharacterCard character={relatedCharacter} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- More Characters -->
     <section>
       <h2 class="text-3xl font-manga text-dragon-gold mb-6 text-center">
         More Warriors to Discover
