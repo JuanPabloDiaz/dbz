@@ -2,37 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 import CharacterCard from '../components/CharacterCard.astro';
 import Pagination from '../components/Pagination.astro';
-import Icon from '../components/Icon.astro';
 import { dragonBallApi } from '../utils/api';
 import type { Character } from '../types/api';
 
-export const prerender = false;
-
-// Get query parameters
-const url = new URL(Astro.request.url);
-const page = parseInt(url.searchParams.get('page') || '1');
-const name = url.searchParams.get('name') || '';
-const race = url.searchParams.get('race') || '';
-const gender = url.searchParams.get('gender') || '';
-const affiliation = url.searchParams.get('affiliation') || '';
-
-// Fetch characters with filters
-const params = {
-  page,
-  limit: 12,
-  ...(name && { name }),
-  ...(race && { race }),
-  ...(gender && { gender }),
-  ...(affiliation && { affiliation }),
-};
-
+// Para sitios estáticos, cargamos la primera página por defecto
 let characters: Character[] = [];
 let meta = {
   totalItems: 0,
   itemCount: 0,
   itemsPerPage: 12,
   totalPages: 0,
-  currentPage: page,
+  currentPage: 1,
 };
 let links: {
   first: string;
@@ -47,7 +27,7 @@ let links: {
 };
 
 try {
-  const response = await dragonBallApi.getAllCharacters(params);
+  const response = await dragonBallApi.getAllCharacters({ page: 1, limit: 12 });
   characters = response?.items || [];
   meta = response?.meta || meta;
   links = response?.links || links;
@@ -56,7 +36,7 @@ try {
   // Keep default values
 }
 
-// Available filter options (you might want to fetch these dynamically)
+// Available filter options
 const races = ['Human', 'Saiyan', 'Namekian', 'Majin', 'Android', 'Angel', 'God', 'Frieza Race'];
 const genders = ['Male', 'Female'];
 const affiliations = [
@@ -73,23 +53,20 @@ const affiliations = [
   <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="text-center mb-12">
-      <h1 class="text-5xl font-manga text-dragon-gold mb-4">Legendary Warriors</h1>
+      <h1 class="text-5xl font-manga text-dragon-gold mb-4">Dragon Ball Characters</h1>
       <p class="text-xl text-gray-300">Discover the most powerful fighters across the universe</p>
     </div>
 
     <!-- Filters -->
-    <div class="bg-gray-800 p-6 rounded-lg mb-8 border border-dragon-gold/20">
-      <h2 class="text-2xl font-dragon text-dragon-gold mb-4">Filter Characters</h2>
-
+    <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg mb-8 border border-dragon-gold/30">
       <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div>
           <label class="block text-white font-semibold mb-2">Name</label>
           <input
             type="text"
             name="name"
-            value={name}
             placeholder="Search by name..."
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none placeholder-gray-400"
           />
         </div>
 
@@ -97,14 +74,12 @@ const affiliations = [
           <label class="block text-white font-semibold mb-2">Race</label>
           <select
             name="race"
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Races</option>
             {
               races.map((raceOption) => (
-                <option value={raceOption} selected={race === raceOption}>
-                  {raceOption}
-                </option>
+                <option value={raceOption}>{raceOption}</option>
               ))
             }
           </select>
@@ -114,14 +89,12 @@ const affiliations = [
           <label class="block text-white font-semibold mb-2">Gender</label>
           <select
             name="gender"
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Genders</option>
             {
               genders.map((genderOption) => (
-                <option value={genderOption} selected={gender === genderOption}>
-                  {genderOption}
-                </option>
+                <option value={genderOption}>{genderOption}</option>
               ))
             }
           </select>
@@ -131,14 +104,12 @@ const affiliations = [
           <label class="block text-white font-semibold mb-2">Affiliation</label>
           <select
             name="affiliation"
-            class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
+            class="w-full p-2 bg-gray-700/80 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           >
             <option value="">All Affiliations</option>
             {
               affiliations.map((affiliationOption) => (
-                <option value={affiliationOption} selected={affiliation === affiliationOption}>
-                  {affiliationOption}
-                </option>
+                <option value={affiliationOption}>{affiliationOption}</option>
               ))
             }
           </select>
@@ -147,7 +118,7 @@ const affiliations = [
         <div class="flex items-end">
           <button
             type="submit"
-            class="w-full bg-dragon-gradient text-white p-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+            class="w-full bg-dragon-gradient text-white p-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-dragon-gold/25 transition-all duration-300"
           >
             Filter
           </button>
@@ -157,51 +128,43 @@ const affiliations = [
 
     <!-- Results Info -->
     <div class="flex justify-between items-center mb-6">
-      <p class="text-gray-300">
-        Showing {meta.itemCount} of {meta.totalItems} characters
-        {name || race || gender || affiliation ? ' (filtered)' : ''}
+      <p class="text-gray-300 results-info">
+        Showing <span class="text-dragon-gold font-semibold">{meta.itemCount}</span> of <span class="text-dragon-gold font-semibold">{meta.totalItems}</span> characters
       </p>
-      <p class="text-gray-300">
-        Page {meta.currentPage} of {meta.totalPages}
+      <p class="text-gray-300 page-info">
+        Page <span class="text-dragon-gold font-semibold">{meta.currentPage}</span> of <span class="text-dragon-gold font-semibold">{meta.totalPages}</span>
       </p>
     </div>
 
     <!-- Characters Grid -->
-    {
-      characters.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {characters.map((character) => (
-            <CharacterCard character={character} showDetails={true} />
-          ))}
-        </div>
-      ) : (
-        <div class="text-center py-16">
-          <div class="flex justify-center mb-4">
-            <Icon name="🔍" size="6xl" color="dragon-gold" />
-          </div>
-          <h3 class="text-2xl font-manga text-dragon-gold mb-2">No Characters Found</h3>
-          <p class="text-gray-300 mb-6">Try adjusting your filters or search terms</p>
-          <a
-            href="/characters"
-            class="bg-dragon-gradient text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
-          >
-            Reset Filters
-          </a>
-        </div>
-      )
-    }
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 characters-grid">
+      {characters.map((character) => (
+        <CharacterCard character={character} />
+      ))}
+    </div>
 
     <!-- Pagination -->
     {
-      characters.length > 0 && (
-        <Pagination
-          currentPage={meta.currentPage}
-          totalPages={meta.totalPages}
-          baseUrl="/characters"
-          searchParams={url.searchParams}
-          links={links}
-        />
+      meta.totalPages > 1 && (
+        <div class="pagination-container">
+          <Pagination
+            currentPage={meta.currentPage}
+            totalPages={meta.totalPages}
+            baseUrl="/characters"
+            searchParams={new URLSearchParams()}
+            links={links}
+          />
+        </div>
       )
     }
   </div>
+
+  <script src="/pagination.js" is:inline></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', function() {
+      if (window.DragonBallPagination) {
+        window.DragonBallPagination.initCharacters();
+      }
+    });
+  </script>
 </Layout>

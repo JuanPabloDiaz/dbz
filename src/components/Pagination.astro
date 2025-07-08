@@ -30,14 +30,14 @@ const getPageUrl = (link: string | undefined, fallbackPage: number): string => {
       // Convert API URL to local URL
       const url = new URL(link);
       const params = new URLSearchParams(url.search);
-      
+
       // Build local URL with the same parameters
       const localParams = new URLSearchParams(searchParams || {});
       localParams.set('page', params.get('page') || fallbackPage.toString());
       if (params.get('limit')) {
         localParams.set('limit', params.get('limit')!);
       }
-      
+
       return `${baseUrl}?${localParams.toString()}`;
     } catch (error) {
       // Fallback to buildUrl if URL parsing fails
@@ -69,105 +69,111 @@ const pageNumbers = generatePageNumbers();
 
 // Get navigation URLs
 const firstPageUrl = links?.first ? getPageUrl(links.first, 1) : buildUrl(1);
-const previousPageUrl = links?.previous ? getPageUrl(links.previous, currentPage - 1) : buildUrl(currentPage - 1);
-const nextPageUrl = links?.next ? getPageUrl(links.next, currentPage + 1) : buildUrl(currentPage + 1);
+const previousPageUrl = links?.previous
+  ? getPageUrl(links.previous, currentPage - 1)
+  : buildUrl(currentPage - 1);
+const nextPageUrl = links?.next
+  ? getPageUrl(links.next, currentPage + 1)
+  : buildUrl(currentPage + 1);
 const lastPageUrl = links?.last ? getPageUrl(links.last, totalPages) : buildUrl(totalPages);
 ---
 
 {
   totalPages > 1 && (
-    <nav class="flex justify-center items-center space-x-2 mt-8" aria-label="Pagination Navigation">
-      {/* First Page Button */}
-      {currentPage > 1 && (
-        <a
-          href={firstPageUrl}
-          class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors flex items-center gap-1"
-          aria-label="Go to first page"
-        >
-          <Icon name="pagination-first" size="sm" />
-          First
-        </a>
-      )}
-
-      {/* Previous Page Button */}
-      {currentPage > 1 && links?.previous && (
-        <a
-          href={previousPageUrl}
-          class="px-3 py-2 bg-dragon-blue text-white rounded-lg hover:bg-dragon-orange transition-colors flex items-center gap-1"
-          aria-label="Go to previous page"
-        >
-          <Icon name="pagination-previous" size="sm" />
-          Previous
-        </a>
-      )}
-
-      {/* Page Numbers */}
-      {pageNumbers[0] > 1 && (
-        <>
+    <div class="flex justify-center mt-12">
+      <nav class="flex items-center space-x-1 bg-gray-800/80 backdrop-blur-sm p-2 rounded-lg border border-gray-700/50" aria-label="Pagination Navigation">
+        {/* First Page Button */}
+        {currentPage > 1 && (
           <a
             href={firstPageUrl}
-            class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors"
-            aria-label="Go to page 1"
+            class="px-3 py-2 bg-gray-700/80 text-gray-300 rounded-md hover:bg-dragon-orange hover:text-white transition-all duration-200 flex items-center gap-1 text-sm font-medium"
+            aria-label="Go to first page"
           >
-            1
+            <Icon name="pagination-first" size="sm" />
+            First
           </a>
-          {pageNumbers[0] > 2 && <span class="text-gray-400">...</span>}
-        </>
-      )}
+        )}
 
-      {pageNumbers.map((page) => (
-        <a
-          href={buildUrl(page)}
-          class={`px-3 py-2 rounded-lg transition-colors ${
-            page === currentPage
-              ? 'bg-dragon-gold text-gray-900 font-bold'
-              : 'bg-gray-700 text-white hover:bg-dragon-orange'
-          }`}
-          aria-label={page === currentPage ? `Current page ${page}` : `Go to page ${page}`}
-          aria-current={page === currentPage ? 'page' : undefined}
-        >
-          {page}
-        </a>
-      ))}
+        {/* Previous Page Button */}
+        {currentPage > 1 && links?.previous && (
+          <a
+            href={previousPageUrl}
+            class="px-3 py-2 bg-dragon-blue/80 text-white rounded-md hover:bg-dragon-orange transition-all duration-200 flex items-center gap-1 text-sm font-medium"
+            aria-label="Go to previous page"
+          >
+            <Icon name="pagination-previous" size="sm" />
+            Previous
+          </a>
+        )}
 
-      {pageNumbers[pageNumbers.length - 1] < totalPages && (
-        <>
-          {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-            <span class="text-gray-400">...</span>
-          )}
+        {/* Page Numbers */}
+        {pageNumbers[0] > 1 && (
+          <>
+            <a
+              href={firstPageUrl}
+              class="px-3 py-2 bg-gray-700/80 text-gray-300 rounded-md hover:bg-dragon-orange hover:text-white transition-all duration-200 text-sm font-medium"
+              aria-label="Go to page 1"
+            >
+              1
+            </a>
+            {pageNumbers[0] > 2 && <span class="text-gray-400 px-2">...</span>}
+          </>
+        )}
+
+        {pageNumbers.map((page) => (
+          <a
+            href={buildUrl(page)}
+            class={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium ${
+              page === currentPage
+                ? 'bg-dragon-gold text-gray-900 font-bold shadow-md'
+                : 'bg-gray-700/80 text-gray-300 hover:bg-dragon-orange hover:text-white'
+            }`}
+            aria-label={page === currentPage ? `Current page ${page}` : `Go to page ${page}`}
+            aria-current={page === currentPage ? 'page' : undefined}
+          >
+            {page}
+          </a>
+        ))}
+
+        {pageNumbers[pageNumbers.length - 1] < totalPages && (
+          <>
+            {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
+              <span class="text-gray-400 px-2">...</span>
+            )}
+            <a
+              href={lastPageUrl}
+              class="px-3 py-2 bg-gray-700/80 text-gray-300 rounded-md hover:bg-dragon-orange hover:text-white transition-all duration-200 text-sm font-medium"
+              aria-label={`Go to page ${totalPages}`}
+            >
+              {totalPages}
+            </a>
+          </>
+        )}
+
+        {/* Next Page Button */}
+        {currentPage < totalPages && links?.next && (
+          <a
+            href={nextPageUrl}
+            class="px-3 py-2 bg-dragon-blue/80 text-white rounded-md hover:bg-dragon-orange transition-all duration-200 flex items-center gap-1 text-sm font-medium"
+            aria-label="Go to next page"
+          >
+            Next
+            <Icon name="pagination-next" size="sm" />
+          </a>
+        )}
+
+        {/* Last Page Button */}
+        {currentPage < totalPages && (
           <a
             href={lastPageUrl}
-            class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors"
-            aria-label={`Go to page ${totalPages}`}
+            class="px-3 py-2 bg-gray-700/80 text-gray-300 rounded-md hover:bg-dragon-orange hover:text-white transition-all duration-200 flex items-center gap-1 text-sm font-medium"
+            aria-label="Go to last page"
           >
-            {totalPages}
+            Last
+            <Icon name="pagination-last" size="sm" />
           </a>
-        </>
-      )}
-
-      {/* Next Page Button */}
-      {currentPage < totalPages && links?.next && (
-        <a
-          href={nextPageUrl}
-          class="px-3 py-2 bg-dragon-blue text-white rounded-lg hover:bg-dragon-orange transition-colors flex items-center gap-1"
-          aria-label="Go to next page"
-        >
-          Next
-          <Icon name="pagination-next" size="sm" />
-        </a>
-      )}
-
-      {/* Last Page Button */}
-      {currentPage < totalPages && (
-        <a
-          href={lastPageUrl}
-          class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-dragon-orange transition-colors flex items-center gap-1"
-          aria-label="Go to last page"
-        >
-          Last
-          <Icon name="pagination-last" size="sm" />
-        </a>
-      )}
-    </nav>
+        )}
+      </nav>
+    </div>
   )
 }
