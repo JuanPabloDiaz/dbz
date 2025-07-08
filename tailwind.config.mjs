@@ -5,11 +5,13 @@ export default {
     extend: {
       colors: {
         'dragon-orange': '#FF8C00',
+        'dragon-orange-light': '#FFB84D', // Better contrast for dark backgrounds
         'dragon-blue': '#1E3A8A',
         'dragon-gold': '#FFD700',
         'dragon-red': '#DC2626',
         'saiyan-yellow': '#FEF08A',
         'namek-green': '#16A34A',
+        'namek-green-light': '#22C55E', // Better contrast for dark backgrounds
       },
       fontFamily: {
         dragon: ['Orbitron', 'monospace'],

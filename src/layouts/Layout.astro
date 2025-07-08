@@ -44,7 +44,13 @@ const { title, description = 'Dragon Ball - Explore characters, planets, and tra
               >Transformations</a
             >
           </div>
-          <button id="mobile-menu-btn" class="md:hidden text-white hover:text-yellow-200">
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden text-white hover:text-yellow-200"
+            aria-label="Toggle mobile menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -81,7 +87,8 @@ const { title, description = 'Dragon Ball - Explore characters, planets, and tra
           <a
             href="https://jpdiaz.dev"
             target="_blank"
-            class="text-dragon-gold hover:text-dragon-orange transition-colors transition-all font-semibold"
+            class="text-dragon-gold hover:text-dragon-orange transition-colors font-semibold underline decoration-2 underline-offset-2"
+            aria-label="Juan Diaz Portfolio (opens in new tab)"
           >
             Juan Diaz
           </a>
@@ -90,7 +97,8 @@ const { title, description = 'Dragon Ball - Explore characters, planets, and tra
           Built with Astro, TypeScript, Tailwind CSS, and the <a
             href="https://web.dragonball-api.com"
             target="_blank"
-            class="text-dragon-gold hover:text-dragon-orange transition-colors"
+            class="text-dragon-gold hover:text-dragon-orange transition-colors underline decoration-2 underline-offset-2"
+            aria-label="Dragon Ball API (opens in new tab)"
           >
             Dragon Ball API
           </a>
@@ -104,7 +112,9 @@ const { title, description = 'Dragon Ball - Explore characters, planets, and tra
         const mobileMenu = document.getElementById('mobile-menu');
 
         mobileMenuBtn?.addEventListener('click', () => {
+          const isHidden = mobileMenu?.classList.contains('hidden') ?? false;
           mobileMenu?.classList.toggle('hidden');
+          mobileMenuBtn?.setAttribute('aria-expanded', (!isHidden).toString());
         });
       });
     </script>

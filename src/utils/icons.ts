@@ -173,11 +173,11 @@ export function getIconSize(
 export function getIconColor(color: string): string {
   const colorMap: Record<string, string> = {
     'dragon-gold': 'text-dragon-gold',
-    'dragon-orange': 'text-dragon-orange',
+    'dragon-orange': 'text-dragon-orange-light',
     'dragon-blue': 'text-dragon-blue',
     'dragon-red': 'text-dragon-red',
     'saiyan-yellow': 'text-saiyan-yellow',
-    'namek-green': 'text-namek-green',
+    'namek-green': 'text-namek-green-light',
     white: 'text-white',
     gray: 'text-gray-400',
     current: 'text-current',
