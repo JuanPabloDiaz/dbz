@@ -1,8 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import CharacterCard from '../../components/CharacterCard.astro';
-import Icon from '../../components/Icon.astro';
-import { dragonBallApi } from '../../utils/api';
+import Layout from '@layouts/Layout.astro';
+import CharacterCard from '@components/CharacterCard.astro';
+import Icon from '@components/Icon.astro';
+import { dragonBallApi } from '@utils/api';
 
 export async function getStaticPaths() {
   try {
@@ -67,17 +67,19 @@ if (!planet) {
             planet.isDestroyed ? 'bg-dragon-red' : 'bg-namek-green'
           }`}
         >
-          {planet.isDestroyed ? (
-            <>
-              <Icon name="💥" size="sm" color="white" />
-              Destroyed
-            </>
-          ) : (
-            <>
-              <Icon name="🌍" size="sm" color="white" />
-              Active
-            </>
-          )}
+          {
+            planet.isDestroyed ? (
+              <>
+                <Icon name="💥" size="sm" color="white" />
+                Destroyed
+              </>
+            ) : (
+              <>
+                <Icon name="🌍" size="sm" color="white" />
+                Active
+              </>
+            )
+          }
         </div>
       </div>
 
@@ -122,11 +124,13 @@ if (!planet) {
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
       <div class="bg-gray-800 p-6 rounded-lg text-center border border-namek-green/20">
         <div class="flex justify-center mb-3">
-          {planet.isDestroyed ? (
-            <Icon name="💥" size="4xl" color="dragon-red" />
-          ) : (
-            <Icon name="🌍" size="4xl" color="namek-green" />
-          )}
+          {
+            planet.isDestroyed ? (
+              <Icon name="💥" size="4xl" color="dragon-red" />
+            ) : (
+              <Icon name="🌍" size="4xl" color="namek-green" />
+            )
+          }
         </div>
         <div class="text-namek-green font-semibold text-lg">Status</div>
         <div class="text-white text-xl">

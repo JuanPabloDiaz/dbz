@@ -1,7 +1,7 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Icon from '../../components/Icon.astro';
-import { dragonBallApi } from '../../utils/api';
+import Layout from '@layouts/Layout.astro';
+import Icon from '@components/Icon.astro';
+import { dragonBallApi } from '@utils/api';
 
 export async function getStaticPaths() {
   try {
@@ -115,11 +115,7 @@ const powerStars = getPowerStars(transformation.ki);
             <div class="flex space-x-1 lg:hidden">
               {
                 Array.from({ length: 5 }).map((_, i) => (
-                  <Icon
-                    name="⭐"
-                    size="xl"
-                    color={i < powerStars ? 'saiyan-yellow' : 'gray'}
-                  />
+                  <Icon name="⭐" size="xl" color={i < powerStars ? 'saiyan-yellow' : 'gray'} />
                 ))
               }
             </div>

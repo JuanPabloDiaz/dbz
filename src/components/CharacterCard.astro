@@ -94,7 +94,11 @@ const { character, showDetails = false } = Astro.props;
             <Icon
               name="⭐"
               size="lg"
-              color={i < Math.min(parseInt(character.ki.replace(/\D/g, '')) / 1000000000, 5) ? 'dragon-gold' : 'gray'}
+              color={
+                i < Math.min(parseInt(character.ki.replace(/\D/g, '')) / 1000000000, 5)
+                  ? 'dragon-gold'
+                  : 'gray'
+              }
             />
           ))
         }

@@ -1,6 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Icon from '../components/Icon.astro';
+import Layout from '@layouts/Layout.astro';
+import Icon from '@components/Icon.astro';
 ---
 
 <Layout title="404 - Page Not Found | Dragon Ball Universe">
@@ -80,15 +80,21 @@ import Icon from '../components/Icon.astro';
           Use the search features on our main pages to find characters, planets, or transformations!
         </p>
         <div class="flex flex-wrap gap-2 justify-center">
-          <span class="bg-dragon-orange/20 text-dragon-orange px-3 py-1 rounded-full text-sm flex items-center gap-2">
+          <span
+            class="bg-dragon-orange/20 text-dragon-orange px-3 py-1 rounded-full text-sm flex items-center gap-2"
+          >
             <Icon name="🔍" size="sm" />
             Search Characters
           </span>
-          <span class="bg-namek-green/20 text-namek-green px-3 py-1 rounded-full text-sm flex items-center gap-2">
+          <span
+            class="bg-namek-green/20 text-namek-green px-3 py-1 rounded-full text-sm flex items-center gap-2"
+          >
             <Icon name="🔍" size="sm" />
             Search Planets
           </span>
-          <span class="bg-saiyan-yellow/20 text-saiyan-yellow px-3 py-1 rounded-full text-sm flex items-center gap-2">
+          <span
+            class="bg-saiyan-yellow/20 text-saiyan-yellow px-3 py-1 rounded-full text-sm flex items-center gap-2"
+          >
             <Icon name="🔍" size="sm" />
             Search Transformations
           </span>
