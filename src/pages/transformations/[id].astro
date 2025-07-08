@@ -1,7 +1,7 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import Icon from '@components/Icon.astro';
-import { dragonBallApi } from '@utils/api';
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { dragonBallApi } from '../../utils/api';
 
 export async function getStaticPaths() {
   try {
@@ -56,12 +56,13 @@ const powerStars = getPowerStars(transformation.ki);
 <Layout title={`${transformation.name} - Dragon Ball Transformation`}>
   <div class="container mx-auto px-4 py-8">
     <!-- Back Button -->
-    <div class="mb-6">
+    <div class="mb-8">
       <a
         href="/transformations"
-        class="inline-flex items-center text-saiyan-yellow hover:text-yellow-300 transition-colors"
+        class="inline-flex items-center text-saiyan-yellow hover:text-yellow-300 transition-colors text-lg font-semibold"
       >
-        ← Back to Transformations
+        <Icon name="🔙" size="md" />
+        <span class="ml-2">Back to Transformations</span>
       </a>
     </div>
 
@@ -71,7 +72,7 @@ const powerStars = getPowerStars(transformation.ki);
         <img
           src={transformation.image}
           alt={transformation.name}
-          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-saiyan-yellow/20"
+          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-saiyan-yellow/30"
         />
         <div
           class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-lg"
@@ -106,7 +107,7 @@ const powerStars = getPowerStars(transformation.ki);
           <h1 class="text-5xl font-manga text-saiyan-yellow mb-4 lg:hidden">
             {transformation.name}
           </h1>
-          <div class="bg-gray-800 p-6 rounded-lg border border-saiyan-yellow/20">
+          <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-saiyan-yellow/30">
             <h3 class="text-saiyan-yellow font-semibold mb-3 text-xl flex items-center gap-2">
               <Icon name="⚡" size="lg" color="saiyan-yellow" />
               Power Level
@@ -122,7 +123,7 @@ const powerStars = getPowerStars(transformation.ki);
           </div>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-lg border border-dragon-gold/20">
+        <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-dragon-gold/30">
           <h3 class="text-dragon-gold font-semibold mb-3 text-xl">Transformation Details</h3>
           <div class="space-y-3">
             <div class="flex justify-between">
@@ -178,7 +179,7 @@ const powerStars = getPowerStars(transformation.ki);
           </div>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-lg border border-dragon-red/20">
+        <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-dragon-red/30">
           <h3 class="text-dragon-red font-semibold mb-3 text-xl">Combat Analysis</h3>
           <div class="grid grid-cols-2 gap-4">
             <div class="text-center">
@@ -222,7 +223,7 @@ const powerStars = getPowerStars(transformation.ki);
 
     <!-- Transformation Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-saiyan-yellow/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-saiyan-yellow/30">
         <div class="flex justify-center mb-2">
           <Icon name="⚡" size="3xl" color="saiyan-yellow" />
         </div>
@@ -230,7 +231,7 @@ const powerStars = getPowerStars(transformation.ki);
         <div class="text-white">{transformation.ki}</div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
         <div class="flex justify-center mb-2">
           <Icon name="⭐" size="3xl" color="dragon-gold" />
         </div>
@@ -238,7 +239,7 @@ const powerStars = getPowerStars(transformation.ki);
         <div class="text-white">{powerStars}/5 Stars</div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-red/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-red/30">
         <div class="flex justify-center mb-2">
           <Icon name="🎯" size="3xl" color="dragon-red" />
         </div>
@@ -258,7 +259,7 @@ const powerStars = getPowerStars(transformation.ki);
         </div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-namek-green/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-namek-green/30">
         <div class="flex justify-center mb-2">
           <Icon name="🌟" size="3xl" color="namek-green" />
         </div>
@@ -270,7 +271,7 @@ const powerStars = getPowerStars(transformation.ki);
     </div>
 
     <!-- Transformation Lore -->
-    <section class="mb-12 bg-gray-800 p-8 rounded-lg border border-saiyan-yellow/20">
+    <section class="mb-12 bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg border border-saiyan-yellow/30">
       <h2 class="text-3xl font-manga text-saiyan-yellow mb-6 text-center">Transformation Lore</h2>
       <div class="prose prose-invert max-w-none">
         <p class="text-gray-300 text-lg leading-relaxed mb-6">
@@ -332,7 +333,7 @@ const powerStars = getPowerStars(transformation.ki);
       <div class="text-center">
         <a
           href="/transformations"
-          class="bg-saiyan-gradient text-gray-900 px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          class="bg-saiyan-gradient text-gray-900 px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl hover:shadow-saiyan-yellow/25 transition-all duration-300 transform hover:scale-105"
         >
           Explore All Transformations
         </a>

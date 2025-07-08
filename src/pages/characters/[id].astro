@@ -1,8 +1,8 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import TransformationCard from '@components/TransformationCard.astro';
-import Icon from '@components/Icon.astro';
-import { dragonBallApi } from '@utils/api';
+import Layout from '../../layouts/Layout.astro';
+import TransformationCard from '../../components/TransformationCard.astro';
+import Icon from '../../components/Icon.astro';
+import { dragonBallApi } from '../../utils/api';
 
 export async function getStaticPaths() {
   try {
@@ -45,12 +45,13 @@ if (!character) {
 <Layout title={`${character.name} - Dragon Ball Character`} description={character.description}>
   <div class="container mx-auto px-4 py-8">
     <!-- Back Button -->
-    <div class="mb-6">
+    <div class="mb-8">
       <a
         href="/characters"
-        class="inline-flex items-center text-dragon-gold hover:text-dragon-orange transition-colors"
+        class="inline-flex items-center text-dragon-gold hover:text-dragon-orange transition-colors text-lg font-semibold"
       >
-        ← Back to Characters
+        <Icon name="🔙" size="md" />
+        <span class="ml-2">Back to Characters</span>
       </a>
     </div>
 
@@ -60,16 +61,16 @@ if (!character) {
         <img
           src={character.image}
           alt={character.name}
-          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-dragon-gold/20"
+          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-dragon-gold/30"
         />
         <div
-          class="absolute top-4 right-4 bg-dragon-orange px-3 py-1 rounded-full text-white font-bold"
+          class="absolute top-4 right-4 bg-dragon-orange/90 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold text-sm"
         >
           {character.race}
         </div>
         {
           character.gender && (
-            <div class="absolute top-4 left-4 bg-dragon-blue px-3 py-1 rounded-full text-white font-bold">
+            <div class="absolute top-4 left-4 bg-dragon-blue/90 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold text-sm">
               {character.gender}
             </div>
           )
@@ -78,10 +79,10 @@ if (!character) {
 
       <div class="space-y-6">
         <div>
-          <h1 class="text-5xl font-manga text-dragon-gold mb-2">{character.name}</h1>
+          <h1 class="text-5xl font-manga text-dragon-gold mb-4">{character.name}</h1>
           {
             character.affiliation && (
-              <span class="inline-block bg-dragon-blue px-4 py-2 rounded-full text-white font-semibold">
+              <span class="inline-block bg-dragon-blue/80 backdrop-blur-sm px-4 py-2 rounded-full text-white font-semibold">
                 {character.affiliation}
               </span>
             )
@@ -89,11 +90,11 @@ if (!character) {
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <div class="bg-gray-800 p-4 rounded-lg border border-dragon-gold/20">
+          <div class="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-dragon-gold/30">
             <h3 class="text-dragon-orange-light font-semibold mb-2">Base Ki</h3>
             <p class="text-2xl font-dragon text-white">{character.ki}</p>
           </div>
-          <div class="bg-gray-800 p-4 rounded-lg border border-dragon-gold/20">
+          <div class="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-dragon-gold/30">
             <h3 class="text-dragon-orange-light font-semibold mb-2">Maximum Ki</h3>
             <p class="text-2xl font-dragon text-white">{character.maxKi}</p>
           </div>
@@ -101,13 +102,14 @@ if (!character) {
 
         {
           character.originPlanet && (
-            <div class="bg-gray-800 p-4 rounded-lg border border-namek-green/20">
+            <div class="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-namek-green/30">
               <h3 class="text-namek-green font-semibold mb-2">Origin Planet</h3>
               <a
                 href={`/planets/${character.originPlanet.id}`}
-                class="text-xl text-white hover:text-namek-green transition-colors"
+                class="text-xl text-white hover:text-namek-green transition-colors flex items-center gap-2"
               >
-                {character.originPlanet.name} →
+                <span>{character.originPlanet.name}</span>
+                <Icon name="🌍" size="md" />
               </a>
             </div>
           )
@@ -115,7 +117,7 @@ if (!character) {
 
         {
           character.description && (
-            <div class="bg-gray-800 p-6 rounded-lg border border-dragon-gold/20">
+            <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-dragon-gold/30">
               <h3 class="text-dragon-gold font-semibold mb-3 text-xl">Biography</h3>
               <p class="text-gray-300 leading-relaxed">{character.description}</p>
             </div>
@@ -126,7 +128,7 @@ if (!character) {
 
     <!-- Character Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
         <div class="flex justify-center mb-2">
           <Icon name="🥊" size="3xl" color="dragon-gold" />
         </div>
@@ -134,7 +136,7 @@ if (!character) {
         <div class="text-white">{character.race}</div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
         <div class="flex justify-center mb-2">
           <Icon name="⚧️" size="3xl" color="dragon-gold" />
         </div>
@@ -142,7 +144,7 @@ if (!character) {
         <div class="text-white">{character.gender || 'Unknown'}</div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
         <div class="flex justify-center mb-2">
           <Icon name="🏆" size="3xl" color="dragon-gold" />
         </div>
@@ -150,7 +152,7 @@ if (!character) {
         <div class="text-white">{character.affiliation || 'None'}</div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
         <div class="flex justify-center mb-2">
           <Icon name="⚡" size="3xl" color="dragon-gold" />
         </div>
@@ -183,7 +185,7 @@ if (!character) {
       <div class="text-center">
         <a
           href="/characters"
-          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          class="bg-dragon-gradient text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl hover:shadow-dragon-gold/25 transition-all duration-300 transform hover:scale-105"
         >
           Explore All Characters
         </a>

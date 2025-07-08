@@ -1,8 +1,8 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import CharacterCard from '@components/CharacterCard.astro';
-import Icon from '@components/Icon.astro';
-import { dragonBallApi } from '@utils/api';
+import Layout from '../../layouts/Layout.astro';
+import CharacterCard from '../../components/CharacterCard.astro';
+import Icon from '../../components/Icon.astro';
+import { dragonBallApi } from '../../utils/api';
 
 export async function getStaticPaths() {
   try {
@@ -45,12 +45,13 @@ if (!planet) {
 <Layout title={`${planet.name} - Dragon Ball Planet`} description={planet.description}>
   <div class="container mx-auto px-4 py-8">
     <!-- Back Button -->
-    <div class="mb-6">
+    <div class="mb-8">
       <a
         href="/planets"
-        class="inline-flex items-center text-namek-green hover:text-green-400 transition-colors"
+        class="inline-flex items-center text-namek-green hover:text-green-400 transition-colors text-lg font-semibold"
       >
-        ← Back to Planets
+        <Icon name="🔙" size="md" />
+        <span class="ml-2">Back to Planets</span>
       </a>
     </div>
 
@@ -60,11 +61,11 @@ if (!planet) {
         <img
           src={planet.image}
           alt={planet.name}
-          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-namek-green/20"
+          class="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-namek-green/30"
         />
         <div
-          class={`absolute top-4 right-4 px-3 py-1 rounded-full text-white font-bold flex items-center gap-2 ${
-            planet.isDestroyed ? 'bg-dragon-red' : 'bg-namek-green'
+          class={`absolute top-4 right-4 px-3 py-1 rounded-full text-white font-bold flex items-center gap-2 text-sm backdrop-blur-sm ${
+            planet.isDestroyed ? 'bg-dragon-red/90' : 'bg-namek-green/90'
           }`}
         >
           {
@@ -88,8 +89,8 @@ if (!planet) {
           <h1 class="text-5xl font-manga text-namek-green mb-4">{planet.name}</h1>
           <div class="flex items-center space-x-4 text-lg">
             <span
-              class={`inline-flex items-center px-4 py-2 rounded-full font-semibold ${
-                planet.isDestroyed ? 'bg-dragon-red text-white' : 'bg-namek-green text-white'
+              class={`inline-flex items-center px-4 py-2 rounded-full font-semibold backdrop-blur-sm ${
+                planet.isDestroyed ? 'bg-dragon-red/80 text-white' : 'bg-namek-green/80 text-white'
               }`}
             >
               {planet.isDestroyed ? '🚫 Destroyed Planet' : '✨ Thriving World'}
@@ -99,7 +100,7 @@ if (!planet) {
 
         {
           planet.description && (
-            <div class="bg-gray-800 p-6 rounded-lg border border-namek-green/20">
+            <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-namek-green/30">
               <h3 class="text-namek-green font-semibold mb-3 text-xl">Planet Overview</h3>
               <p class="text-gray-300 leading-relaxed text-lg">{planet.description}</p>
             </div>
@@ -108,7 +109,7 @@ if (!planet) {
 
         {
           planet.characters && planet.characters.length > 0 && (
-            <div class="bg-gray-800 p-6 rounded-lg border border-dragon-gold/20">
+            <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-dragon-gold/30">
               <h3 class="text-dragon-gold font-semibold mb-3 text-xl">Notable Inhabitants</h3>
               <p class="text-2xl font-dragon text-white">
                 {planet.characters.length}
@@ -122,7 +123,7 @@ if (!planet) {
 
     <!-- Planet Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-namek-green/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-namek-green/30">
         <div class="flex justify-center mb-3">
           {
             planet.isDestroyed ? (
@@ -138,7 +139,7 @@ if (!planet) {
         </div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-gold/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-gold/30">
         <div class="text-4xl mb-3">👥</div>
         <div class="text-dragon-gold font-semibold text-lg">Known Inhabitants</div>
         <div class="text-white text-xl">
@@ -146,7 +147,7 @@ if (!planet) {
         </div>
       </div>
 
-      <div class="bg-gray-800 p-6 rounded-lg text-center border border-dragon-blue/20">
+      <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-dragon-blue/30">
         <div class="text-4xl mb-3">🌌</div>
         <div class="text-dragon-blue font-semibold text-lg">Galaxy Sector</div>
         <div class="text-white text-xl">
@@ -178,7 +179,7 @@ if (!planet) {
     }
 
     <!-- Planet Facts -->
-    <section class="mb-12 bg-gray-800 p-8 rounded-lg border border-namek-green/20">
+    <section class="mb-12 bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg border border-namek-green/30">
       <h2 class="text-3xl font-manga text-namek-green mb-6 text-center">Planet Facts</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -221,7 +222,7 @@ if (!planet) {
       <div class="text-center">
         <a
           href="/planets"
-          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          class="bg-gradient-to-r from-namek-green to-green-600 text-white px-8 py-4 rounded-lg text-lg font-bold hover:shadow-xl hover:shadow-namek-green/25 transition-all duration-300 transform hover:scale-105"
         >
           Discover All Planets
         </a>
