@@ -2,37 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 import CharacterCard from '../components/CharacterCard.astro';
 import Pagination from '../components/Pagination.astro';
-import Icon from '../components/Icon.astro';
 import { dragonBallApi } from '../utils/api';
 import type { Character } from '../types/api';
 
-export const prerender = false;
-
-// Get query parameters
-const url = new URL(Astro.request.url);
-const page = parseInt(url.searchParams.get('page') || '1');
-const name = url.searchParams.get('name') || '';
-const race = url.searchParams.get('race') || '';
-const gender = url.searchParams.get('gender') || '';
-const affiliation = url.searchParams.get('affiliation') || '';
-
-// Fetch characters with filters
-const params = {
-  page,
-  limit: 12,
-  ...(name && { name }),
-  ...(race && { race }),
-  ...(gender && { gender }),
-  ...(affiliation && { affiliation }),
-};
-
+// Para sitios estáticos, cargamos la primera página por defecto
 let characters: Character[] = [];
 let meta = {
   totalItems: 0,
   itemCount: 0,
   itemsPerPage: 12,
   totalPages: 0,
-  currentPage: page,
+  currentPage: 1,
 };
 let links: {
   first: string;
@@ -47,7 +27,7 @@ let links: {
 };
 
 try {
-  const response = await dragonBallApi.getAllCharacters(params);
+  const response = await dragonBallApi.getAllCharacters({ page: 1, limit: 12 });
   characters = response?.items || [];
   meta = response?.meta || meta;
   links = response?.links || links;
@@ -56,7 +36,7 @@ try {
   // Keep default values
 }
 
-// Available filter options (you might want to fetch these dynamically)
+// Available filter options
 const races = ['Human', 'Saiyan', 'Namekian', 'Majin', 'Android', 'Angel', 'God', 'Frieza Race'];
 const genders = ['Male', 'Female'];
 const affiliations = [
@@ -87,7 +67,6 @@ const affiliations = [
           <input
             type="text"
             name="name"
-            value={name}
             placeholder="Search by name..."
             class="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-dragon-gold focus:outline-none"
           />
@@ -102,9 +81,7 @@ const affiliations = [
             <option value="">All Races</option>
             {
               races.map((raceOption) => (
-                <option value={raceOption} selected={race === raceOption}>
-                  {raceOption}
-                </option>
+                <option value={raceOption}>{raceOption}</option>
               ))
             }
           </select>
@@ -119,9 +96,7 @@ const affiliations = [
             <option value="">All Genders</option>
             {
               genders.map((genderOption) => (
-                <option value={genderOption} selected={gender === genderOption}>
-                  {genderOption}
-                </option>
+                <option value={genderOption}>{genderOption}</option>
               ))
             }
           </select>
@@ -136,9 +111,7 @@ const affiliations = [
             <option value="">All Affiliations</option>
             {
               affiliations.map((affiliationOption) => (
-                <option value={affiliationOption} selected={affiliation === affiliationOption}>
-                  {affiliationOption}
-                </option>
+                <option value={affiliationOption}>{affiliationOption}</option>
               ))
             }
           </select>
@@ -157,51 +130,36 @@ const affiliations = [
 
     <!-- Results Info -->
     <div class="flex justify-between items-center mb-6">
-      <p class="text-gray-300">
+      <p class="text-gray-300 results-info">
         Showing {meta.itemCount} of {meta.totalItems} characters
-        {name || race || gender || affiliation ? ' (filtered)' : ''}
       </p>
-      <p class="text-gray-300">
+      <p class="text-gray-300 page-info">
         Page {meta.currentPage} of {meta.totalPages}
       </p>
     </div>
 
     <!-- Characters Grid -->
-    {
-      characters.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {characters.map((character) => (
-            <CharacterCard character={character} showDetails={true} />
-          ))}
-        </div>
-      ) : (
-        <div class="text-center py-16">
-          <div class="flex justify-center mb-4">
-            <Icon name="🔍" size="6xl" color="dragon-gold" />
-          </div>
-          <h3 class="text-2xl font-manga text-dragon-gold mb-2">No Characters Found</h3>
-          <p class="text-gray-300 mb-6">Try adjusting your filters or search terms</p>
-          <a
-            href="/characters"
-            class="bg-dragon-gradient text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
-          >
-            Reset Filters
-          </a>
-        </div>
-      )
-    }
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 characters-grid">
+      {characters.map((character) => (
+        <CharacterCard character={character} />
+      ))}
+    </div>
 
     <!-- Pagination -->
     {
-      characters.length > 0 && (
-        <Pagination
-          currentPage={meta.currentPage}
-          totalPages={meta.totalPages}
-          baseUrl="/characters"
-          searchParams={url.searchParams}
-          links={links}
-        />
+      meta.totalPages > 1 && (
+        <div class="pagination-container">
+          <Pagination
+            currentPage={meta.currentPage}
+            totalPages={meta.totalPages}
+            baseUrl="/characters"
+            searchParams={new URLSearchParams()}
+            links={links}
+          />
+        </div>
       )
     }
   </div>
+
+  <script src="../scripts/pagination.js"></script>
 </Layout>

@@ -30,14 +30,14 @@ const getPageUrl = (link: string | undefined, fallbackPage: number): string => {
       // Convert API URL to local URL
       const url = new URL(link);
       const params = new URLSearchParams(url.search);
-      
+
       // Build local URL with the same parameters
       const localParams = new URLSearchParams(searchParams || {});
       localParams.set('page', params.get('page') || fallbackPage.toString());
       if (params.get('limit')) {
         localParams.set('limit', params.get('limit')!);
       }
-      
+
       return `${baseUrl}?${localParams.toString()}`;
     } catch (error) {
       // Fallback to buildUrl if URL parsing fails
@@ -69,8 +69,12 @@ const pageNumbers = generatePageNumbers();
 
 // Get navigation URLs
 const firstPageUrl = links?.first ? getPageUrl(links.first, 1) : buildUrl(1);
-const previousPageUrl = links?.previous ? getPageUrl(links.previous, currentPage - 1) : buildUrl(currentPage - 1);
-const nextPageUrl = links?.next ? getPageUrl(links.next, currentPage + 1) : buildUrl(currentPage + 1);
+const previousPageUrl = links?.previous
+  ? getPageUrl(links.previous, currentPage - 1)
+  : buildUrl(currentPage - 1);
+const nextPageUrl = links?.next
+  ? getPageUrl(links.next, currentPage + 1)
+  : buildUrl(currentPage + 1);
 const lastPageUrl = links?.last ? getPageUrl(links.last, totalPages) : buildUrl(totalPages);
 ---
 

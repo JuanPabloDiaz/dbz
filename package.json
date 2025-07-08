@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "astro check",
-    "clean": "rm -rf node_modules .astro .cache dist coverage && npm install"
+    "clean": "rm -rf node_modules .astro .cache dist coverage"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

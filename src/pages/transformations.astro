@@ -6,8 +6,6 @@ import Icon from '../components/Icon.astro';
 import { dragonBallApi } from '../utils/api';
 import type { Transformation, ApiResponse } from '../types/api';
 
-export const prerender = false;
-
 // Get query parameters
 const url = new URL(Astro.request.url);
 const page = parseInt(url.searchParams.get('page') || '1');
